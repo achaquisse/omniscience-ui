@@ -4,23 +4,12 @@ import {Button} from '@/components/ui/button'
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card'
 
 export default function Home() {
-  const {user, accessToken, signOut} = useAuth()
+  const {user, accessToken} = useAuth()
   const navigate = useNavigate()
 
-  const handleSignOut = async () => {
-    await signOut()
-    navigate('/login')
-  }
-
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-4xl mx-auto space-y-6">
-        <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold">Dashboard</h1>
-          <Button onClick={handleSignOut} variant="outline">
-            Sign Out
-          </Button>
-        </div>
+    <div className="space-y-6">
+      <h1 className="text-3xl font-bold">Dashboard</h1>
 
         <Card>
           <CardHeader>
@@ -58,17 +47,16 @@ export default function Home() {
         </Card>
 
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Token</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="w-full wrap-anywhere">
-              {accessToken}
-            </p>
-          </CardContent>
-        </Card>
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Token</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="w-full wrap-anywhere">
+            {accessToken}
+          </p>
+        </CardContent>
+      </Card>
     </div>
   )
 }

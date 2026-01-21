@@ -8,7 +8,7 @@ import {Input} from '@/components/ui/input'
 import {ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Grid, List, Loader2} from 'lucide-react'
 
 export default function StudentClasses() {
-  const {accessToken, signOut} = useAuth()
+  const {accessToken} = useAuth()
   const navigate = useNavigate()
 
   const [classes, setClasses] = useState([])
@@ -26,11 +26,6 @@ export default function StudentClasses() {
 
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 9
-
-  const handleSignOut = async () => {
-    await signOut()
-    navigate('/login')
-  }
 
   useEffect(() => {
     const loadClasses = async () => {
@@ -90,14 +85,8 @@ export default function StudentClasses() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-8">
-      <div className="max-w-7xl mx-auto space-y-6">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <h1 className="text-3xl font-bold">Student Classes</h1>
-          <Button onClick={handleSignOut} variant="outline">
-            Sign Out
-          </Button>
-        </div>
+    <div className="space-y-6">
+      <h1 className="text-3xl font-bold">Student Classes</h1>
 
         <Card>
           <CardHeader className="cursor-pointer" onClick={() => setFiltersExpanded(!filtersExpanded)}>
@@ -234,7 +223,6 @@ export default function StudentClasses() {
             )}
           </>
         )}
-      </div>
     </div>
   )
 }

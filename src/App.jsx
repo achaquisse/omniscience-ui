@@ -1,10 +1,13 @@
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import {AuthProvider} from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import Layout from "@/components/Layout";
 import Login from "@/pages/Login.jsx";
 import Home from "@/pages/Home.jsx";
 import StudentClasses from "@/pages/StudentClasses.jsx";
 import Registrations from "@/pages/Registrations.jsx";
+import ClassAttendanceReport from "@/pages/ClassAttendanceReport.jsx";
+import StudentAttendanceReport from "@/pages/StudentAttendanceReport.jsx";
 
 export default function App() {
   return (
@@ -16,7 +19,9 @@ export default function App() {
             path="/"
             element={
               <ProtectedRoute>
-                <Home/>
+                <Layout>
+                  <Home/>
+                </Layout>
               </ProtectedRoute>
             }
           />
@@ -24,7 +29,9 @@ export default function App() {
             path="/student-classes"
             element={
               <ProtectedRoute>
-                <StudentClasses/>
+                <Layout>
+                  <StudentClasses/>
+                </Layout>
               </ProtectedRoute>
             }
           />
@@ -32,7 +39,29 @@ export default function App() {
             path="/student-classes/:classId/registrations"
             element={
               <ProtectedRoute>
-                <Registrations/>
+                <Layout>
+                  <Registrations/>
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/student-classes/:classId/attendance-report"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <ClassAttendanceReport/>
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/student-classes/:classId/students/:studentId/attendance-report"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <StudentAttendanceReport/>
+                </Layout>
               </ProtectedRoute>
             }
           />
