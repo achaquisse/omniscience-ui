@@ -44,7 +44,7 @@ export default function Breadcrumbs() {
 
     if (segment === 'student-classes') {
       breadcrumbItems.push({
-        label: 'Student Classes',
+        label: 'Class Attendance',
         path: '/student-classes'
       })
     } else if (segment === 'registrations') {
@@ -60,7 +60,7 @@ export default function Breadcrumbs() {
         })
       } else {
         breadcrumbItems.push({
-          label: 'Class Attendance',
+          label: 'Class Attendance Report',
           path: currentPath
         })
       }

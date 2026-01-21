@@ -1,11 +1,28 @@
 import {useEffect, useState} from 'react'
 import {useNavigate, useParams} from 'react-router-dom'
 import {useAuth} from '@/contexts/AuthContext'
-import {fetchRegistrations, recordBulkAttendance, fetchStudentAttendanceReport} from '@/lib/api'
+import {fetchRegistrations, fetchStudentAttendanceReport, recordBulkAttendance} from '@/lib/api'
 import {Button} from '@/components/ui/button'
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card'
 import {Input} from '@/components/ui/input'
-import {ArrowLeft, BarChart3, Calendar, ChartBar, Check, CheckCircle2, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, ClipboardCheck, Loader2, MessageSquare, Save, X, XCircle} from 'lucide-react'
+import {
+  ArrowLeft,
+  BarChart3,
+  Calendar,
+  ChartBar,
+  Check,
+  CheckCircle2,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  ChevronUp,
+  ClipboardCheck,
+  Loader2,
+  MessageSquare,
+  Save,
+  X,
+  XCircle
+} from 'lucide-react'
 
 export default function Registrations() {
   const {classId} = useParams()
@@ -34,7 +51,7 @@ export default function Registrations() {
   const [saving, setSaving] = useState(false)
   const [saveSuccess, setSaveSuccess] = useState(false)
   const [attendanceMode, setAttendanceMode] = useState(false)
-  const [remarksModal, setRemarksModal] = useState({ open: false, registrationId: null, status: null })
+  const [remarksModal, setRemarksModal] = useState({open: false, registrationId: null, status: null})
 
   useEffect(() => {
     const loadRegistrations = async () => {
@@ -65,14 +82,14 @@ export default function Registrations() {
       setLoadingAttendance(true)
       try {
         const attendanceByStudent = {}
-        
+
         await Promise.all(
           registrations.map(async (reg) => {
             try {
               const report = await fetchStudentAttendanceReport(
-                accessToken, 
-                reg.StudentID, 
-                classId, 
+                accessToken,
+                reg.StudentID,
+                classId,
                 {
                   startDate: selectedDate,
                   endDate: selectedDate
@@ -85,7 +102,7 @@ export default function Registrations() {
                 const recordDate = record.date.split('T')[0]
                 return recordDate === selectedDate
               })
-              
+
               if (recordForDate) {
                 console.log(`Found attendance for reg ${reg.ID}:`, recordForDate)
                 attendanceByStudent[reg.ID] = {
@@ -177,7 +194,7 @@ export default function Registrations() {
     const newDate = new Date(selectedDate)
     newDate.setDate(newDate.getDate() + days)
     const dateString = newDate.toISOString().split('T')[0]
-    
+
     if (dateString <= today) {
       setSelectedDate(dateString)
       setSaveSuccess(false)
@@ -186,7 +203,7 @@ export default function Registrations() {
 
   const setAttendanceStatus = (registrationId, status) => {
     if (status === 'LATE' || status === 'EXCUSED') {
-      setRemarksModal({ open: true, registrationId, status })
+      setRemarksModal({open: true, registrationId, status})
     } else {
       setAttendanceMap(prev => ({
         ...prev,
@@ -200,7 +217,7 @@ export default function Registrations() {
   }
 
   const handleRemarksSubmit = (remarks) => {
-    const { registrationId, status } = remarksModal
+    const {registrationId, status} = remarksModal
     setAttendanceMap(prev => ({
       ...prev,
       [registrationId]: {
@@ -209,7 +226,7 @@ export default function Registrations() {
         remarks
       }
     }))
-    setRemarksModal({ open: false, registrationId: null, status: null })
+    setRemarksModal({open: false, registrationId: null, status: null})
   }
 
   const setAttendanceRemarks = (registrationId, remarks) => {
@@ -244,7 +261,7 @@ export default function Registrations() {
 
       await recordBulkAttendance(accessToken, attendanceRecords)
       setSaveSuccess(true)
-      
+
       const attendanceByStudent = {}
       for (const record of attendanceRecords) {
         attendanceByStudent[record.registration_id] = {
@@ -252,10 +269,10 @@ export default function Registrations() {
           remarks: record.remarks
         }
       }
-      
+
       setExistingAttendance(prev => ({...prev, ...attendanceByStudent}))
       setAttendanceMap({})
-      
+
       setTimeout(() => setSaveSuccess(false), 3000)
     } catch (err) {
       setError(err.message)
@@ -284,7 +301,7 @@ export default function Registrations() {
   }
 
   const getAttendanceColor = (status) => {
-    switch(status) {
+    switch (status) {
       case 'PRESENT':
         return 'bg-green-100 text-green-800 border-green-300'
       case 'ABSENT':
@@ -300,7 +317,7 @@ export default function Registrations() {
 
   const formatDateDisplay = (dateString) => {
     const date = new Date(dateString)
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }
+    const options = {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'}
     return date.toLocaleDateString('en-US', options)
   }
 
@@ -346,7 +363,7 @@ export default function Registrations() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => setRemarksModal({ open: false, registrationId: null, status: null })}
+                onClick={() => setRemarksModal({open: false, registrationId: null, status: null})}
               >
                 Cancel
               </Button>
@@ -366,14 +383,14 @@ export default function Registrations() {
 
   return (
     <>
-      <RemarksModal />
+      <RemarksModal/>
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div className="flex items-center gap-4">
             <Button onClick={() => navigate('/student-classes')} variant="outline" size="icon">
               <ArrowLeft className="size-4"/>
             </Button>
-            <h1 className="text-3xl font-bold">Class Registrations</h1>
+            <h1 className="text-3xl font-bold">Enrolled Students</h1>
           </div>
           <div className="flex gap-2">
             <Button onClick={() => navigate(`/student-classes/${classId}/attendance-report`)} variant="outline">
@@ -548,8 +565,8 @@ export default function Registrations() {
               {paginatedRegistrations.map((reg) => {
                 const currentStatus = getAttendanceStatus(reg.ID)
                 return (
-                  <Card 
-                    key={reg.ID} 
+                  <Card
+                    key={reg.ID}
                     className={`transition-all ${currentStatus === 'ABSENT' ? 'border-red-300 shadow-md' : ''}`}
                   >
                     <CardContent className="pt-4 pb-4">
@@ -560,7 +577,8 @@ export default function Registrations() {
                               {reg.Student?.FirstName} {reg.Student?.LastName}
                             </h3>
                             {currentStatus && (
-                              <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${getAttendanceColor(currentStatus)}`}>
+                              <span
+                                className={`px-2 py-0.5 rounded-full text-xs font-medium ${getAttendanceColor(currentStatus)}`}>
                                 {currentStatus}
                               </span>
                             )}
@@ -586,7 +604,7 @@ export default function Registrations() {
                             </div>
                           )}
                         </div>
-                        
+
                         {canEditAttendance && (
                           <div className="flex flex-wrap gap-2">
                             <Button

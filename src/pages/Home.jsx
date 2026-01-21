@@ -1,62 +1,53 @@
 import {useNavigate} from 'react-router-dom'
-import {useAuth} from '@/contexts/AuthContext'
-import {Button} from '@/components/ui/button'
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card'
+import {ClipboardCheck} from 'lucide-react'
 
 export default function Home() {
-  const {user, accessToken} = useAuth()
   const navigate = useNavigate()
+
+  const modules = [
+    {
+      id: 'class-attendance',
+      name: 'Class Attendance',
+      description: 'Manage student class attendance',
+      icon: ClipboardCheck,
+      path: '/student-classes',
+      color: 'text-blue-600'
+    }
+  ]
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold">Dashboard</h1>
+      <div>
+        <h1 className="text-3xl font-bold">Home</h1>
+        <p className="text-muted-foreground mt-2">Select a module to get started</p>
+      </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Welcome!</CardTitle>
-            <CardDescription>You are successfully authenticated</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            <div>
-              <span className="font-medium">Email:</span> {user?.email}
-            </div>
-            <div>
-              <span className="font-medium">User ID:</span> {user?.id}
-            </div>
-            <div>
-              <span className="font-medium">Created:</span>{' '}
-              {user?.created_at ? new Date(user.created_at).toLocaleDateString() : 'N/A'}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Protected Content</CardTitle>
-            <CardDescription>This page is only accessible to authenticated users</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <p className="text-sm text-muted-foreground">
-              You can now access all protected features of the application. This demonstrates that the
-              Supabase authentication flow is working correctly.
-            </p>
-            <Button onClick={() => navigate('/student-classes')}>
-              View Student Classes
-            </Button>
-          </CardContent>
-        </Card>
-
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Token</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="w-full wrap-anywhere">
-            {accessToken}
-          </p>
-        </CardContent>
-      </Card>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {modules.map((module) => {
+          const IconComponent = module.icon
+          return (
+            <Card
+              key={module.id}
+              className="hover:shadow-lg transition-all cursor-pointer group border-2 hover:border-primary"
+              onClick={() => navigate(module.path)}
+            >
+              <CardHeader className="text-center pb-4">
+                <div className="mx-auto mb-4 flex items-center justify-center">
+                  <div
+                    className={`p-6 rounded-2xl bg-blue-50 group-hover:bg-blue-100 transition-colors ${module.color}`}>
+                    <IconComponent className="size-12" strokeWidth={1.5}/>
+                  </div>
+                </div>
+                <CardTitle className="text-xl">{module.name}</CardTitle>
+              </CardHeader>
+              <CardContent className="text-center">
+                <CardDescription className="text-sm">{module.description}</CardDescription>
+              </CardContent>
+            </Card>
+          )
+        })}
+      </div>
     </div>
   )
 }

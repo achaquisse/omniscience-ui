@@ -86,14 +86,14 @@ export default function StudentClasses() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold">Student Classes</h1>
+      <h1 className="text-3xl font-bold">Class Attendance</h1>
 
         <Card>
           <CardHeader className="cursor-pointer" onClick={() => setFiltersExpanded(!filtersExpanded)}>
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle>Filters</CardTitle>
-                <CardDescription>Filter student classes by activity period and search</CardDescription>
+                <CardDescription>Filter classes by activity period and search</CardDescription>
               </div>
               <Button variant="ghost" size="icon-sm">
                 {filtersExpanded ? <ChevronUp className="size-4"/> : <ChevronDown className="size-4"/>}
