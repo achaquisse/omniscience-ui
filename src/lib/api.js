@@ -1,5 +1,4 @@
-// const API_BASE_URL = 'http://localhost:8080'
-const API_BASE_URL = 'https://api.omniscience.co.mz'
+const API_BASE_URL = import.meta.env.VITE_API_URL
 
 export const fetchStudentClasses = async (accessToken, {startDate, endDate} = {}) => {
   const params = new URLSearchParams()
@@ -33,7 +32,7 @@ export const fetchStudentClasses = async (accessToken, {startDate, endDate} = {}
 export const fetchStudentClass = async (accessToken, studentClassId) => {
   const classes = await fetchStudentClasses(accessToken)
   const studentClass = classes.find(cls => cls.ID === parseInt(studentClassId))
-  
+
   if (!studentClass) {
     throw new Error('Student class not found')
   }
@@ -103,18 +102,22 @@ export const recordBulkAttendance = async (accessToken, attendanceDataArray) => 
   return response.json()
 }
 
-export const fetchClassAttendanceReport = async (accessToken, studentClassId, {startDate, endDate, period = 'day'} = {}) => {
+export const fetchClassAttendanceReport = async (accessToken, studentClassId, {
+  startDate,
+  endDate,
+  period = 'day'
+} = {}) => {
   const params = new URLSearchParams()
   params.append('student_class_id', studentClassId)
-  
+
   if (startDate) {
     params.append('start_date', startDate)
   }
-  
+
   if (endDate) {
     params.append('end_date', endDate)
   }
-  
+
   params.append('period', period)
 
   const url = `${API_BASE_URL}/attendance/class-report?${params.toString()}`
@@ -135,15 +138,18 @@ export const fetchClassAttendanceReport = async (accessToken, studentClassId, {s
   return response.json()
 }
 
-export const fetchStudentAttendanceReport = async (accessToken, studentId, studentClassId, {startDate, endDate} = {}) => {
+export const fetchStudentAttendanceReport = async (accessToken, studentId, studentClassId, {
+  startDate,
+  endDate
+} = {}) => {
   const params = new URLSearchParams()
   params.append('student_id', studentId)
   params.append('student_class_id', studentClassId)
-  
+
   if (startDate) {
     params.append('start_date', startDate)
   }
-  
+
   if (endDate) {
     params.append('end_date', endDate)
   }
