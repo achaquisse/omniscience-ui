@@ -6,6 +6,14 @@ import {Button} from '@/components/ui/button'
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card'
 import {Input} from '@/components/ui/input'
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import {
   ArrowLeft,
   BarChart3,
   Calendar,
@@ -52,6 +60,7 @@ export default function Registrations() {
   const [saveSuccess, setSaveSuccess] = useState(false)
   const [attendanceMode, setAttendanceMode] = useState(false)
   const [remarksModal, setRemarksModal] = useState({open: false, registrationId: null, status: null})
+  const [individualAttendanceModal, setIndividualAttendanceModal] = useState({open: false, registration: null})
 
   useEffect(() => {
     const loadRegistrations = async () => {
@@ -334,56 +343,204 @@ export default function Registrations() {
     loadingAttendance
   })
 
+  const handleSaveIndividualAttendance = async (status, remarks) => {
+    try {
+      setSaving(true)
+      setError(null)
+      setSaveSuccess(false)
+
+      const attendanceRecords = [{
+        registration_id: individualAttendanceModal.registration.ID,
+        date: selectedDate,
+        status,
+        remarks: remarks || ''
+      }]
+
+      await recordBulkAttendance(accessToken, attendanceRecords)
+      setSaveSuccess(true)
+
+      setExistingAttendance(prev => ({
+        ...prev,
+        [individualAttendanceModal.registration.ID]: {
+          status,
+          remarks: remarks || ''
+        }
+      }))
+
+      setIndividualAttendanceModal({open: false, registration: null})
+      setTimeout(() => setSaveSuccess(false), 3000)
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setSaving(false)
+    }
+  }
+
   const RemarksModal = () => {
     const [remarks, setRemarks] = useState('')
 
-    if (!remarksModal.open) return null
+    return (
+      <Dialog open={remarksModal.open} onOpenChange={(open) => !open && setRemarksModal({open: false, registrationId: null, status: null})}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add Remarks</DialogTitle>
+            <DialogDescription>
+              {remarksModal.status === 'LATE' ? 'Why is the student late?' : 'Reason for excused absence'}
+            </DialogDescription>
+          </DialogHeader>
+          <div>
+            <label className="text-sm font-medium mb-2 block">Remarks</label>
+            <textarea
+              className="w-full px-3 py-2 border border-input bg-background rounded-md text-sm min-h-[100px]"
+              placeholder="Enter remarks..."
+              value={remarks}
+              onChange={(e) => setRemarks(e.target.value)}
+              autoFocus
+            />
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setRemarksModal({open: false, registrationId: null, status: null})}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="default"
+              size="sm"
+              onClick={() => handleRemarksSubmit(remarks)}
+            >
+              Save
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    )
+  }
+
+  const IndividualAttendanceModal = () => {
+    const [selectedStatus, setSelectedStatus] = useState('')
+    const [remarks, setRemarks] = useState('')
+
+    useEffect(() => {
+      if (individualAttendanceModal.open && individualAttendanceModal.registration) {
+        const regId = individualAttendanceModal.registration.ID
+        const currentStatus = getAttendanceStatus(regId)
+        const currentRemarks = attendanceMap[regId]?.remarks || existingAttendance[regId]?.remarks || ''
+        
+        setSelectedStatus(currentStatus || '')
+        setRemarks(currentRemarks)
+      }
+    }, [individualAttendanceModal.open, individualAttendanceModal.registration])
+
+    const needsRemarks = selectedStatus === 'LATE' || selectedStatus === 'EXCUSED'
+
+    const handleClose = () => {
+      setIndividualAttendanceModal({open: false, registration: null})
+      setSelectedStatus('')
+      setRemarks('')
+    }
 
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-        <Card className="w-full max-w-md">
-          <CardHeader>
-            <CardTitle>Add Remarks</CardTitle>
-            <CardDescription>
-              {remarksModal.status === 'LATE' ? 'Why is the student late?' : 'Reason for excused absence'}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
+      <Dialog open={individualAttendanceModal.open} onOpenChange={(open) => !open && handleClose()}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Record Attendance</DialogTitle>
+            <DialogDescription>
+              {individualAttendanceModal.registration?.Student?.FirstName} {individualAttendanceModal.registration?.Student?.LastName}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
             <div>
-              <label className="text-sm font-medium mb-2 block">Remarks</label>
-              <textarea
-                className="w-full px-3 py-2 border border-input bg-background rounded-md text-sm min-h-[100px]"
-                placeholder="Enter remarks..."
-                value={remarks}
-                onChange={(e) => setRemarks(e.target.value)}
-                autoFocus
-              />
+              <label className="text-sm font-medium mb-2 block">Attendance Status</label>
+              <div className="grid grid-cols-2 gap-2">
+                <Button
+                  variant={selectedStatus === 'PRESENT' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setSelectedStatus('PRESENT')}
+                  className={selectedStatus === 'PRESENT' ? 'bg-green-600 hover:bg-green-700' : ''}
+                >
+                  <Check className="size-4 mr-1"/>
+                  Present
+                </Button>
+                <Button
+                  variant={selectedStatus === 'ABSENT' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setSelectedStatus('ABSENT')}
+                  className={selectedStatus === 'ABSENT' ? 'bg-red-600 hover:bg-red-700' : ''}
+                >
+                  <X className="size-4 mr-1"/>
+                  Absent
+                </Button>
+                <Button
+                  variant={selectedStatus === 'LATE' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setSelectedStatus('LATE')}
+                  className={selectedStatus === 'LATE' ? 'bg-yellow-600 hover:bg-yellow-700' : ''}
+                >
+                  Late
+                </Button>
+                <Button
+                  variant={selectedStatus === 'EXCUSED' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setSelectedStatus('EXCUSED')}
+                  className={selectedStatus === 'EXCUSED' ? 'bg-blue-600 hover:bg-blue-700' : ''}
+                >
+                  Excused
+                </Button>
+              </div>
             </div>
-            <div className="flex gap-2 justify-end">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setRemarksModal({open: false, registrationId: null, status: null})}
-              >
-                Cancel
-              </Button>
-              <Button
-                variant="default"
-                size="sm"
-                onClick={() => handleRemarksSubmit(remarks)}
-              >
-                Save
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+            {needsRemarks && (
+              <div>
+                <label className="text-sm font-medium mb-2 block">
+                  Remarks {needsRemarks && <span className="text-red-500">*</span>}
+                </label>
+                <textarea
+                  className="w-full px-3 py-2 border border-input bg-background rounded-md text-sm min-h-[100px]"
+                  placeholder={selectedStatus === 'LATE' ? 'Why is the student late?' : 'Reason for excused absence'}
+                  value={remarks}
+                  onChange={(e) => setRemarks(e.target.value)}
+                />
+              </div>
+            )}
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleClose}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="default"
+              size="sm"
+              onClick={() => handleSaveIndividualAttendance(selectedStatus, remarks)}
+              disabled={!selectedStatus || (needsRemarks && !remarks.trim()) || saving}
+            >
+              {saving ? (
+                <>
+                  <Loader2 className="size-4 mr-2 animate-spin"/>
+                  Saving...
+                </>
+              ) : (
+                <>
+                  <Save className="size-4 mr-2"/>
+                  Save
+                </>
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     )
   }
 
   return (
     <>
       <RemarksModal/>
+      <IndividualAttendanceModal/>
       <div className="space-y-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div className="flex items-center gap-4">
@@ -582,20 +739,36 @@ export default function Registrations() {
                                 {currentStatus}
                               </span>
                             )}
-                            {!canEditAttendance && (
-                              <Button
-                                variant="ghost"
-                                size="icon-sm"
-                                onClick={(e) => {
-                                  e.stopPropagation()
-                                  navigate(`/student-classes/${classId}/students/${reg.StudentID}/attendance-report`)
-                                }}
-                                className="ml-auto opacity-50 hover:opacity-100 transition-opacity"
-                                title="View attendance report"
-                              >
-                                <ChartBar className="size-4"/>
-                              </Button>
-                            )}
+                            <div className="flex gap-1 ml-auto">
+                              {!attendanceMode && isToday && (
+                                <Button
+                                  variant="ghost"
+                                  size="icon-sm"
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    setIndividualAttendanceModal({open: true, registration: reg})
+                                  }}
+                                  className="opacity-50 hover:opacity-100 transition-opacity"
+                                  title="Record attendance"
+                                >
+                                  <ClipboardCheck className="size-4"/>
+                                </Button>
+                              )}
+                              {!canEditAttendance && (
+                                <Button
+                                  variant="ghost"
+                                  size="icon-sm"
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    navigate(`/student-classes/${classId}/students/${reg.StudentID}/attendance-report`)
+                                  }}
+                                  className="opacity-50 hover:opacity-100 transition-opacity"
+                                  title="View attendance report"
+                                >
+                                  <ChartBar className="size-4"/>
+                                </Button>
+                              )}
+                            </div>
                           </div>
                           {(attendanceMap[reg.ID]?.remarks || existingAttendance[reg.ID]?.remarks) && (
                             <div className="text-xs text-muted-foreground mt-1 flex items-center gap-1">

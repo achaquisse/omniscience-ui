@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react'
 import {useNavigate} from 'react-router-dom'
 import {useAuth} from '@/contexts/AuthContext'
-import {fetchStudentClasses} from '@/lib/api'
+import {fetchStudentClasses, fetchClassAttendanceReport} from '@/lib/api'
 import {Button} from '@/components/ui/button'
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card'
 import {Input} from '@/components/ui/input'
@@ -26,6 +26,8 @@ export default function StudentClasses() {
 
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 9
+
+  const [classesWithAttendance, setClassesWithAttendance] = useState(new Set())
 
   useEffect(() => {
     const loadClasses = async () => {
@@ -66,6 +68,38 @@ export default function StudentClasses() {
   const startIndex = (currentPage - 1) * itemsPerPage
   const endIndex = startIndex + itemsPerPage
   const paginatedClasses = filteredClasses.slice(startIndex, endIndex)
+
+  useEffect(() => {
+    const checkTodayAttendance = async () => {
+      if (!accessToken || paginatedClasses.length === 0) return
+
+      const attendanceChecks = paginatedClasses.map(async (cls) => {
+        try {
+          const report = await fetchClassAttendanceReport(accessToken, cls.ID, {
+            startDate: today,
+            endDate: today,
+            period: 'day'
+          })
+          
+          if (report?.dailyData && report.dailyData.length > 0) {
+            const todayData = report.dailyData.find(day => day.date.split('T')[0] === today)
+            if (todayData && (todayData.presentCount > 0 || todayData.absentCount > 0 || todayData.lateCount > 0 || todayData.excusedCount > 0)) {
+              return cls.ID
+            }
+          }
+          return null
+        } catch {
+          return null
+        }
+      })
+
+      const results = await Promise.all(attendanceChecks)
+      const classIdsWithAttendance = results.filter(id => id !== null)
+      setClassesWithAttendance(new Set(classIdsWithAttendance))
+    }
+
+    checkTodayAttendance()
+  }, [accessToken, paginatedClasses, today])
 
   const handlePreviousPage = () => {
     setCurrentPage(prev => Math.max(1, prev - 1))
@@ -179,9 +213,14 @@ export default function StudentClasses() {
               {paginatedClasses.map((cls) => (
                 <Card
                   key={cls.ID}
-                  className="hover:shadow-md transition-shadow cursor-pointer"
+                  className="hover:shadow-md transition-shadow cursor-pointer relative"
                   onClick={() => navigate(`/student-classes/${cls.ID}/registrations`)}
                 >
+                  {classesWithAttendance.has(cls.ID) && (
+                    <div className="absolute top-3 right-3">
+                      <div className="size-2.5 rounded-full bg-green-500" title="Attendance recorded today" />
+                    </div>
+                  )}
                   <CardHeader>
                     <CardTitle className="text-lg">{cls.Name}</CardTitle>
                     <CardDescription>{cls.Course?.Name || 'No Course'}</CardDescription>

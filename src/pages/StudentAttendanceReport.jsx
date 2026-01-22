@@ -1,10 +1,10 @@
 import {useEffect, useState} from 'react'
 import {useNavigate, useParams} from 'react-router-dom'
 import {useAuth} from '@/contexts/AuthContext'
-import {fetchStudentAttendanceReport} from '@/lib/api'
+import {fetchStudentAttendanceReport, fetchStudentClass} from '@/lib/api'
 import {Button} from '@/components/ui/button'
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card'
-import {Input} from '@/components/ui/input'
+import {DateRangePicker} from '@/components/ui/date-range-picker'
 import {ArrowLeft, Calendar, Loader2, TrendingUp} from 'lucide-react'
 import {
   LineChart,
@@ -32,10 +32,38 @@ export default function StudentAttendanceReport() {
   const [error, setError] = useState(null)
 
   const today = new Date().toISOString().split('T')[0]
-  const firstDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString().split('T')[0]
   
-  const [startDate, setStartDate] = useState(firstDayOfMonth)
-  const [endDate, setEndDate] = useState(today)
+  const [startDate, setStartDate] = useState('')
+  const [endDate, setEndDate] = useState('')
+  const [datesInitialized, setDatesInitialized] = useState(false)
+
+  useEffect(() => {
+    const initializeDates = async () => {
+      if (!accessToken || !classId || datesInitialized) return
+
+      try {
+        const studentClass = await fetchStudentClass(accessToken, classId)
+        
+        const periodStart = studentClass.Period?.Start 
+          ? new Date(studentClass.Period.Start).toISOString().split('T')[0]
+          : today
+        
+        const periodEnd = studentClass.Period?.End 
+          ? new Date(studentClass.Period.End).toISOString().split('T')[0]
+          : today
+        
+        setStartDate(periodStart)
+        setEndDate(periodEnd)
+        setDatesInitialized(true)
+      } catch (err) {
+        setStartDate(today)
+        setEndDate(today)
+        setDatesInitialized(true)
+      }
+    }
+
+    initializeDates()
+  }, [accessToken, classId, datesInitialized, today])
 
   useEffect(() => {
     const loadReport = async () => {
@@ -54,7 +82,7 @@ export default function StudentAttendanceReport() {
       }
     }
 
-    if (accessToken && studentId && classId) {
+    if (accessToken && studentId && classId && startDate && endDate) {
       loadReport()
     }
   }, [accessToken, studentId, classId, startDate, endDate])
@@ -173,26 +201,19 @@ export default function StudentAttendanceReport() {
             <CardDescription>Select the period for the report</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm font-medium mb-2 block">Start Date</label>
-                <Input
-                  type="date"
-                  value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
-                  max={today}
-                />
-              </div>
-              <div>
-                <label className="text-sm font-medium mb-2 block">End Date</label>
-                <Input
-                  type="date"
-                  value={endDate}
-                  onChange={(e) => setEndDate(e.target.value)}
-                  max={today}
-                />
-              </div>
-            </div>
+            <DateRangePicker
+              initialDateFrom={startDate}
+              initialDateTo={endDate}
+              showCompare={false}
+              onUpdate={(values) => {
+                if (values.range?.from) {
+                  setStartDate(values.range.from.toISOString().split('T')[0])
+                }
+                if (values.range?.to) {
+                  setEndDate(values.range.to.toISOString().split('T')[0])
+                }
+              }}
+            />
           </CardContent>
         </Card>
 
