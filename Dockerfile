@@ -1,7 +1,7 @@
 FROM nginx:alpine
 
 # Copy built assets from the dist directory
-COPY dist /usr/share/nginx/html
+COPY --chown=nginx:nginx dist /usr/share/nginx/html
 
 # Copy custom nginx configuration (optional)
 COPY nginx.conf /etc/nginx/conf.d/default.conf
