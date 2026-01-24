@@ -105,8 +105,6 @@ export default function Registrations() {
                 }
               )
 
-              console.log(`Attendance report for student ${reg.StudentID}:`, report)
-
               const recordForDate = report.records?.find(record => {
                 const recordDate = record.date.split('T')[0]
                 return recordDate === selectedDate
@@ -125,7 +123,6 @@ export default function Registrations() {
           })
         )
 
-        console.log('Setting existing attendance:', attendanceByStudent)
         setExistingAttendance(attendanceByStudent)
         setAttendanceMap({})
       } catch (err) {
@@ -334,15 +331,6 @@ export default function Registrations() {
   const canEditAttendance = isToday && attendanceMode
   const hasChanges = Object.keys(attendanceMap).length > 0
 
-  console.log('Render state:', {
-    attendanceMode,
-    selectedDate,
-    existingAttendanceCount: Object.keys(existingAttendance).length,
-    existingAttendance,
-    attendanceMapCount: Object.keys(attendanceMap).length,
-    loadingAttendance
-  })
-
   const handleSaveIndividualAttendance = async (status, remarks) => {
     try {
       setSaving(true)
@@ -380,7 +368,8 @@ export default function Registrations() {
     const [remarks, setRemarks] = useState('')
 
     return (
-      <Dialog open={remarksModal.open} onOpenChange={(open) => !open && setRemarksModal({open: false, registrationId: null, status: null})}>
+      <Dialog open={remarksModal.open}
+              onOpenChange={(open) => !open && setRemarksModal({open: false, registrationId: null, status: null})}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Add Remarks</DialogTitle>
@@ -428,7 +417,7 @@ export default function Registrations() {
         const regId = individualAttendanceModal.registration.ID
         const currentStatus = getAttendanceStatus(regId)
         const currentRemarks = attendanceMap[regId]?.remarks || existingAttendance[regId]?.remarks || ''
-        
+
         setSelectedStatus(currentStatus || '')
         setRemarks(currentRemarks)
       }
@@ -453,31 +442,31 @@ export default function Registrations() {
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <label className="text-sm font-medium mb-2 block">Attendance Status</label>
+              <label className="text-xs sm:text-sm font-medium mb-2 block">Attendance Status</label>
               <div className="grid grid-cols-2 gap-2">
                 <Button
                   variant={selectedStatus === 'PRESENT' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setSelectedStatus('PRESENT')}
-                  className={selectedStatus === 'PRESENT' ? 'bg-green-600 hover:bg-green-700' : ''}
+                  className={`text-xs sm:text-sm ${selectedStatus === 'PRESENT' ? 'bg-green-600 hover:bg-green-700' : ''}`}
                 >
-                  <Check className="size-4 mr-1"/>
+                  <Check className="size-3 sm:size-4 mr-1"/>
                   Present
                 </Button>
                 <Button
                   variant={selectedStatus === 'ABSENT' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setSelectedStatus('ABSENT')}
-                  className={selectedStatus === 'ABSENT' ? 'bg-red-600 hover:bg-red-700' : ''}
+                  className={`text-xs sm:text-sm ${selectedStatus === 'ABSENT' ? 'bg-red-600 hover:bg-red-700' : ''}`}
                 >
-                  <X className="size-4 mr-1"/>
+                  <X className="size-3 sm:size-4 mr-1"/>
                   Absent
                 </Button>
                 <Button
                   variant={selectedStatus === 'LATE' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setSelectedStatus('LATE')}
-                  className={selectedStatus === 'LATE' ? 'bg-yellow-600 hover:bg-yellow-700' : ''}
+                  className={`text-xs sm:text-sm ${selectedStatus === 'LATE' ? 'bg-yellow-600 hover:bg-yellow-700' : ''}`}
                 >
                   Late
                 </Button>
@@ -485,7 +474,7 @@ export default function Registrations() {
                   variant={selectedStatus === 'EXCUSED' ? 'default' : 'outline'}
                   size="sm"
                   onClick={() => setSelectedStatus('EXCUSED')}
-                  className={selectedStatus === 'EXCUSED' ? 'bg-blue-600 hover:bg-blue-700' : ''}
+                  className={`text-xs sm:text-sm ${selectedStatus === 'EXCUSED' ? 'bg-blue-600 hover:bg-blue-700' : ''}`}
                 >
                   Excused
                 </Button>
@@ -541,23 +530,26 @@ export default function Registrations() {
     <>
       <RemarksModal/>
       <IndividualAttendanceModal/>
-      <div className="space-y-6">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div className="flex items-center gap-4">
-            <Button onClick={() => navigate('/student-classes')} variant="outline" size="icon">
+      <div className="space-y-4 sm:space-y-6">
+        <div className="flex flex-col gap-3 sm:gap-4">
+          <div className="flex items-center gap-3 sm:gap-4">
+            <Button onClick={() => navigate('/student-classes')} variant="outline" size="icon"
+                    className="flex-shrink-0">
               <ArrowLeft className="size-4"/>
             </Button>
-            <h1 className="text-3xl font-bold">Enrolled Students</h1>
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold">Enrolled Students</h1>
           </div>
-          <div className="flex gap-2">
-            <Button onClick={() => navigate(`/student-classes/${classId}/attendance-report`)} variant="outline">
-              <BarChart3 className="size-4 mr-2"/>
-              View Report
+          <div className="flex flex-wrap gap-2">
+            <Button onClick={() => navigate(`/student-classes/${classId}/attendance-report`)} variant="outline"
+                    size="sm" className="text-xs sm:text-sm">
+              <BarChart3 className="size-3 sm:size-4 mr-1 sm:mr-2"/>
+              <span className="hidden xs:inline">View </span>Report
             </Button>
             {!attendanceMode && isToday && (
-              <Button onClick={() => setAttendanceMode(true)} variant="default">
-                <ClipboardCheck className="size-4 mr-2"/>
-                Record Today's Attendance
+              <Button onClick={() => setAttendanceMode(true)} variant="default" size="sm"
+                      className="text-xs sm:text-sm">
+                <ClipboardCheck className="size-3 sm:size-4 mr-1 sm:mr-2"/>
+                <span className="hidden sm:inline">Record Today's </span>Attendance
               </Button>
             )}
           </div>
@@ -565,32 +557,34 @@ export default function Registrations() {
 
         <Card>
           <CardHeader>
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-              <div>
-                <CardTitle className="flex items-center gap-2">
-                  <Calendar className="size-5"/>
-                  {formatDateDisplay(selectedDate)}
+            <div className="flex flex-col gap-3 sm:gap-4">
+              <div className="flex-1 min-w-0">
+                <CardTitle className="flex items-center gap-2 text-base sm:text-lg flex-wrap">
+                  <Calendar className="size-4 sm:size-5 flex-shrink-0"/>
+                  <span className="truncate">{formatDateDisplay(selectedDate)}</span>
                   {loadingAttendance && <Loader2 className="size-4 animate-spin text-muted-foreground"/>}
                 </CardTitle>
-                <CardDescription>
+                <CardDescription className="text-xs sm:text-sm mt-1">
                   {isToday && attendanceMode ? 'Recording attendance for today' : isToday ? 'Today' : 'Past attendance (read-only)'}
                 </CardDescription>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1">
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => handleDateChange(-1)}
                   disabled={loading}
+                  className="text-xs sm:text-sm px-2 sm:px-3 flex-shrink-0"
                 >
-                  <ChevronLeft className="size-4"/>
-                  Previous Day
+                  <ChevronLeft className="size-3 sm:size-4"/>
+                  <span className="hidden sm:inline ml-1">Previous</span>
                 </Button>
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => setSelectedDate(today)}
                   disabled={isToday || loading}
+                  className="text-xs sm:text-sm px-2 sm:px-3 flex-shrink-0"
                 >
                   Today
                 </Button>
@@ -599,9 +593,10 @@ export default function Registrations() {
                   size="sm"
                   onClick={() => handleDateChange(1)}
                   disabled={isToday || loading}
+                  className="text-xs sm:text-sm px-2 sm:px-3 flex-shrink-0"
                 >
-                  Next Day
-                  <ChevronRight className="size-4"/>
+                  <span className="hidden sm:inline mr-1">Next</span>
+                  <ChevronRight className="size-3 sm:size-4"/>
                 </Button>
               </div>
             </div>
@@ -610,16 +605,17 @@ export default function Registrations() {
 
         {canEditAttendance && (
           <Card>
-            <CardContent className="pt-6">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <div className="text-sm text-muted-foreground">
+            <CardContent className="pt-4 sm:pt-6">
+              <div className="flex flex-col gap-3 sm:gap-4">
+                <div className="text-xs sm:text-sm text-muted-foreground">
                   {hasChanges ? `${Object.keys(attendanceMap).length} students marked` : 'No changes yet'}
                 </div>
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={() => setAttendanceMode(false)}
+                    className="text-xs sm:text-sm"
                   >
                     Cancel
                   </Button>
@@ -628,8 +624,9 @@ export default function Registrations() {
                     size="sm"
                     onClick={handleMarkAllPresent}
                     disabled={saving || loading}
+                    className="text-xs sm:text-sm"
                   >
-                    <CheckCircle2 className="size-4 mr-2"/>
+                    <CheckCircle2 className="size-3 sm:size-4 mr-1 sm:mr-2"/>
                     Mark All Present
                   </Button>
                   <Button
@@ -637,15 +634,16 @@ export default function Registrations() {
                     size="sm"
                     onClick={handleSaveAttendance}
                     disabled={!hasChanges || saving || loading}
+                    className="text-xs sm:text-sm"
                   >
                     {saving ? (
                       <>
-                        <Loader2 className="size-4 mr-2 animate-spin"/>
+                        <Loader2 className="size-3 sm:size-4 mr-1 sm:mr-2 animate-spin"/>
                         Saving...
                       </>
                     ) : (
                       <>
-                        <Save className="size-4 mr-2"/>
+                        <Save className="size-3 sm:size-4 mr-1 sm:mr-2"/>
                         Save Attendance
                       </>
                     )}
@@ -681,26 +679,27 @@ export default function Registrations() {
         <Card>
           <CardHeader className="cursor-pointer" onClick={() => setFiltersExpanded(!filtersExpanded)}>
             <div className="flex items-center justify-between">
-              <div>
-                <CardTitle>Filters</CardTitle>
-                <CardDescription>Search students</CardDescription>
+              <div className="flex-1 min-w-0">
+                <CardTitle className="text-base sm:text-lg">Filters</CardTitle>
+                <CardDescription className="text-xs sm:text-sm">Search students</CardDescription>
               </div>
-              <Button variant="ghost" size="icon-sm">
+              <Button variant="ghost" size="icon-sm" className="flex-shrink-0">
                 {filtersExpanded ? <ChevronUp className="size-4"/> : <ChevronDown className="size-4"/>}
               </Button>
             </div>
           </CardHeader>
-          {filtersExpanded && <CardContent className="space-y-4">
+          {filtersExpanded && <CardContent className="space-y-3 sm:space-y-4">
             <div>
-              <label className="text-sm font-medium mb-2 block">Search</label>
+              <label className="text-xs sm:text-sm font-medium mb-1.5 sm:mb-2 block">Search</label>
               <Input
                 type="text"
                 placeholder="Search by name..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                className="text-sm"
               />
             </div>
-            <div className="text-sm text-muted-foreground">
+            <div className="text-xs sm:text-sm text-muted-foreground">
               Showing {paginatedRegistrations.length} of {filteredRegistrations.length} students
             </div>
           </CardContent>}
@@ -726,16 +725,16 @@ export default function Registrations() {
                     key={reg.ID}
                     className={`transition-all ${currentStatus === 'ABSENT' ? 'border-red-300 shadow-md' : ''}`}
                   >
-                    <CardContent className="pt-4 pb-4">
-                      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+                    <CardContent className="pt-3 sm:pt-4 pb-3 sm:pb-4">
+                      <div className="flex flex-col gap-3">
                         <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-3">
-                            <h3 className="text-base font-semibold truncate">
+                          <div className="flex items-start sm:items-center gap-2 flex-wrap">
+                            <h3 className="text-sm sm:text-base font-semibold truncate flex-1 min-w-[120px]">
                               {reg.Student?.FirstName} {reg.Student?.LastName}
                             </h3>
                             {currentStatus && (
                               <span
-                                className={`px-2 py-0.5 rounded-full text-xs font-medium ${getAttendanceColor(currentStatus)}`}>
+                                className={`px-2 py-0.5 rounded-full text-xs font-medium whitespace-nowrap ${getAttendanceColor(currentStatus)}`}>
                                 {currentStatus}
                               </span>
                             )}
@@ -748,10 +747,10 @@ export default function Registrations() {
                                     e.stopPropagation()
                                     setIndividualAttendanceModal({open: true, registration: reg})
                                   }}
-                                  className="opacity-50 hover:opacity-100 transition-opacity"
+                                  className="opacity-50 hover:opacity-100 transition-opacity flex-shrink-0"
                                   title="Record attendance"
                                 >
-                                  <ClipboardCheck className="size-4"/>
+                                  <ClipboardCheck className="size-3.5 sm:size-4"/>
                                 </Button>
                               )}
                               {!canEditAttendance && (
@@ -762,47 +761,48 @@ export default function Registrations() {
                                     e.stopPropagation()
                                     navigate(`/student-classes/${classId}/students/${reg.StudentID}/attendance-report`)
                                   }}
-                                  className="opacity-50 hover:opacity-100 transition-opacity"
+                                  className="opacity-50 hover:opacity-100 transition-opacity flex-shrink-0"
                                   title="View attendance report"
                                 >
-                                  <ChartBar className="size-4"/>
+                                  <ChartBar className="size-3.5 sm:size-4"/>
                                 </Button>
                               )}
                             </div>
                           </div>
                           {(attendanceMap[reg.ID]?.remarks || existingAttendance[reg.ID]?.remarks) && (
-                            <div className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
-                              <MessageSquare className="size-3"/>
-                              {attendanceMap[reg.ID]?.remarks || existingAttendance[reg.ID]?.remarks}
+                            <div className="text-xs text-muted-foreground mt-2 flex items-start gap-1">
+                              <MessageSquare className="size-3 flex-shrink-0 mt-0.5"/>
+                              <span
+                                className="line-clamp-2">{attendanceMap[reg.ID]?.remarks || existingAttendance[reg.ID]?.remarks}</span>
                             </div>
                           )}
                         </div>
 
                         {canEditAttendance && (
-                          <div className="flex flex-wrap gap-2">
+                          <div className="grid grid-cols-2 sm:flex sm:flex-wrap gap-1.5 sm:gap-2">
                             <Button
                               variant={attendanceMap[reg.ID]?.status === 'PRESENT' ? 'default' : 'outline'}
                               size="sm"
                               onClick={() => setAttendanceStatus(reg.ID, 'PRESENT')}
-                              className={attendanceMap[reg.ID]?.status === 'PRESENT' ? 'bg-green-600 hover:bg-green-700' : ''}
+                              className={`text-xs sm:text-sm ${attendanceMap[reg.ID]?.status === 'PRESENT' ? 'bg-green-600 hover:bg-green-700' : ''}`}
                             >
-                              <Check className="size-4 mr-1"/>
-                              Present
+                              <Check className="size-3 sm:size-4 sm:mr-1"/>
+                              <span className="hidden sm:inline">Present</span>
                             </Button>
                             <Button
                               variant={attendanceMap[reg.ID]?.status === 'ABSENT' ? 'default' : 'outline'}
                               size="sm"
                               onClick={() => setAttendanceStatus(reg.ID, 'ABSENT')}
-                              className={attendanceMap[reg.ID]?.status === 'ABSENT' ? 'bg-red-600 hover:bg-red-700' : ''}
+                              className={`text-xs sm:text-sm ${attendanceMap[reg.ID]?.status === 'ABSENT' ? 'bg-red-600 hover:bg-red-700' : ''}`}
                             >
-                              <X className="size-4 mr-1"/>
-                              Absent
+                              <X className="size-3 sm:size-4 sm:mr-1"/>
+                              <span className="hidden sm:inline">Absent</span>
                             </Button>
                             <Button
                               variant={attendanceMap[reg.ID]?.status === 'LATE' ? 'default' : 'outline'}
                               size="sm"
                               onClick={() => setAttendanceStatus(reg.ID, 'LATE')}
-                              className={attendanceMap[reg.ID]?.status === 'LATE' ? 'bg-yellow-600 hover:bg-yellow-700' : ''}
+                              className={`text-xs sm:text-sm ${attendanceMap[reg.ID]?.status === 'LATE' ? 'bg-yellow-600 hover:bg-yellow-700' : ''}`}
                             >
                               Late
                             </Button>
@@ -810,7 +810,7 @@ export default function Registrations() {
                               variant={attendanceMap[reg.ID]?.status === 'EXCUSED' ? 'default' : 'outline'}
                               size="sm"
                               onClick={() => setAttendanceStatus(reg.ID, 'EXCUSED')}
-                              className={attendanceMap[reg.ID]?.status === 'EXCUSED' ? 'bg-blue-600 hover:bg-blue-700' : ''}
+                              className={`text-xs sm:text-sm ${attendanceMap[reg.ID]?.status === 'EXCUSED' ? 'bg-blue-600 hover:bg-blue-700' : ''}`}
                             >
                               Excused
                             </Button>
@@ -824,17 +824,18 @@ export default function Registrations() {
             </div>
 
             {totalPages > 1 && (
-              <div className="flex justify-center items-center gap-4 pt-4">
+              <div className="flex justify-center items-center gap-2 sm:gap-4 pt-4">
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={handlePreviousPage}
                   disabled={currentPage === 1}
+                  className="text-xs sm:text-sm px-2 sm:px-3"
                 >
-                  <ChevronLeft className="size-4 mr-1"/>
-                  Previous
+                  <ChevronLeft className="size-3 sm:size-4 sm:mr-1"/>
+                  <span className="hidden sm:inline">Previous</span>
                 </Button>
-                <span className="text-sm text-muted-foreground">
+                <span className="text-xs sm:text-sm text-muted-foreground whitespace-nowrap">
                   Page {currentPage} of {totalPages}
                 </span>
                 <Button
@@ -842,9 +843,10 @@ export default function Registrations() {
                   size="sm"
                   onClick={handleNextPage}
                   disabled={currentPage === totalPages}
+                  className="text-xs sm:text-sm px-2 sm:px-3"
                 >
-                  Next
-                  <ChevronRight className="size-4 ml-1"/>
+                  <span className="hidden sm:inline">Next</span>
+                  <ChevronRight className="size-3 sm:size-4 sm:ml-1"/>
                 </Button>
               </div>
             )}

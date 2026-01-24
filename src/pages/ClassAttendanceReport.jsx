@@ -184,20 +184,20 @@ export default function ClassAttendanceReport() {
     .slice(0, 10)
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div className="flex items-center gap-4">
-          <Button onClick={() => navigate(`/student-classes/${classId}/registrations`)} variant="outline" size="icon">
+    <div className="space-y-4 sm:space-y-6">
+      <div className="flex flex-col gap-3 sm:gap-4">
+        <div className="flex items-center gap-3 sm:gap-4">
+          <Button onClick={() => navigate(`/student-classes/${classId}/registrations`)} variant="outline" size="icon" className="flex-shrink-0">
             <ArrowLeft className="size-4"/>
           </Button>
-          <h1 className="text-3xl font-bold">Attendance Report</h1>
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold">Attendance Report</h1>
         </div>
       </div>
 
         <Card>
           <CardHeader>
-            <CardTitle>Report Parameters</CardTitle>
-            <CardDescription>Select date range</CardDescription>
+            <CardTitle className="text-base sm:text-lg">Report Parameters</CardTitle>
+            <CardDescription className="text-xs sm:text-sm">Select date range</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <DateRangePicker
@@ -216,64 +216,64 @@ export default function ClassAttendanceReport() {
           </CardContent>
         </Card>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Total Students</CardTitle>
+            <CardHeader className="pb-2 sm:pb-3">
+              <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground">Total Students</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex items-center gap-2">
-                <Users className="size-5 text-primary"/>
-                <span className="text-3xl font-bold">{report.totalStudents || 0}</span>
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <Users className="size-4 sm:size-5 text-primary flex-shrink-0"/>
+                <span className="text-2xl sm:text-3xl font-bold">{report.totalStudents || 0}</span>
               </div>
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Overall Attendance</CardTitle>
+            <CardHeader className="pb-2 sm:pb-3">
+              <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground">Overall Attendance</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex items-center gap-2">
-                <TrendingUp className="size-5 text-green-600"/>
-                <span className="text-3xl font-bold">{formatPercentage(report.overallSummary?.percentage || 0)}</span>
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <TrendingUp className="size-4 sm:size-5 text-green-600 flex-shrink-0"/>
+                <span className="text-2xl sm:text-3xl font-bold">{formatPercentage(report.overallSummary?.percentage || 0)}</span>
               </div>
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Total Days</CardTitle>
+            <CardHeader className="pb-2 sm:pb-3">
+              <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground">Total Days</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex items-center gap-2">
-                <Calendar className="size-5 text-blue-600"/>
-                <span className="text-3xl font-bold">{report.overallSummary?.totalDays || 0}</span>
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <Calendar className="size-4 sm:size-5 text-blue-600 flex-shrink-0"/>
+                <span className="text-2xl sm:text-3xl font-bold">{report.overallSummary?.totalDays || 0}</span>
               </div>
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Present Days</CardTitle>
+            <CardHeader className="pb-2 sm:pb-3">
+              <CardTitle className="text-xs sm:text-sm font-medium text-muted-foreground">Present Days</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex items-center gap-2">
-                <BarChart3 className="size-5 text-green-600"/>
-                <span className="text-3xl font-bold">{report.overallSummary?.presentCount || 0}</span>
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <BarChart3 className="size-4 sm:size-5 text-green-600 flex-shrink-0"/>
+                <span className="text-2xl sm:text-3xl font-bold">{report.overallSummary?.presentCount || 0}</span>
               </div>
             </CardContent>
           </Card>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
           <Card>
             <CardHeader>
-              <CardTitle>Attendance Distribution</CardTitle>
-              <CardDescription>Overall attendance breakdown</CardDescription>
+              <CardTitle className="text-base sm:text-lg">Attendance Distribution</CardTitle>
+              <CardDescription className="text-xs sm:text-sm">Overall attendance breakdown</CardDescription>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
+              <ResponsiveContainer width="100%" height={250}>
                 <PieChart>
                   <Pie
                     data={overallPieData}
@@ -281,7 +281,7 @@ export default function ClassAttendanceReport() {
                     cy="50%"
                     labelLine={false}
                     label={({name, percent}) => `${name} ${(percent * 100).toFixed(0)}%`}
-                    outerRadius={80}
+                    outerRadius={70}
                     fill="#8884d8"
                     dataKey="value"
                   >
@@ -297,38 +297,38 @@ export default function ClassAttendanceReport() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Attendance Summary</CardTitle>
-              <CardDescription>Detailed breakdown by status</CardDescription>
+              <CardTitle className="text-base sm:text-lg">Attendance Summary</CardTitle>
+              <CardDescription className="text-xs sm:text-sm">Detailed breakdown by status</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-2">
-                    <div className="size-3 rounded-full bg-green-500"/>
-                    <span className="text-sm">Present</span>
+                    <div className="size-2.5 sm:size-3 rounded-full bg-green-500 flex-shrink-0"/>
+                    <span className="text-xs sm:text-sm">Present</span>
                   </div>
-                  <span className="font-semibold">{report.overallSummary?.presentCount || 0}</span>
+                  <span className="font-semibold text-sm sm:text-base">{report.overallSummary?.presentCount || 0}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-2">
-                    <div className="size-3 rounded-full bg-red-500"/>
-                    <span className="text-sm">Absent</span>
+                    <div className="size-2.5 sm:size-3 rounded-full bg-red-500 flex-shrink-0"/>
+                    <span className="text-xs sm:text-sm">Absent</span>
                   </div>
-                  <span className="font-semibold">{report.overallSummary?.absentCount || 0}</span>
+                  <span className="font-semibold text-sm sm:text-base">{report.overallSummary?.absentCount || 0}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-2">
-                    <div className="size-3 rounded-full bg-yellow-500"/>
-                    <span className="text-sm">Late</span>
+                    <div className="size-2.5 sm:size-3 rounded-full bg-yellow-500 flex-shrink-0"/>
+                    <span className="text-xs sm:text-sm">Late</span>
                   </div>
-                  <span className="font-semibold">{report.overallSummary?.lateCount || 0}</span>
+                  <span className="font-semibold text-sm sm:text-base">{report.overallSummary?.lateCount || 0}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-2">
-                    <div className="size-3 rounded-full bg-blue-500"/>
-                    <span className="text-sm">Excused</span>
+                    <div className="size-2.5 sm:size-3 rounded-full bg-blue-500 flex-shrink-0"/>
+                    <span className="text-xs sm:text-sm">Excused</span>
                   </div>
-                  <span className="font-semibold">{report.overallSummary?.excusedCount || 0}</span>
+                  <span className="font-semibold text-sm sm:text-base">{report.overallSummary?.excusedCount || 0}</span>
                 </div>
               </div>
             </CardContent>
@@ -338,20 +338,22 @@ export default function ClassAttendanceReport() {
         {dailyChartData.length > 0 && (
           <Card>
             <CardHeader>
-              <CardTitle>Daily Attendance Trend</CardTitle>
-              <CardDescription>Attendance percentage by day</CardDescription>
+              <CardTitle className="text-base sm:text-lg">Daily Attendance Trend</CardTitle>
+              <CardDescription className="text-xs sm:text-sm">Attendance percentage by day</CardDescription>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={dailyChartData}>
-                  <CartesianGrid strokeDasharray="3 3"/>
-                  <XAxis dataKey="date"/>
-                  <YAxis/>
-                  <Tooltip/>
-                  <Legend/>
-                  <Line type="monotone" dataKey="percentage" stroke={COLORS.present} name="Attendance %"/>
-                </LineChart>
-              </ResponsiveContainer>
+              <div className="w-full overflow-x-auto">
+                <ResponsiveContainer width="100%" height={250} minWidth={300}>
+                  <LineChart data={dailyChartData}>
+                    <CartesianGrid strokeDasharray="3 3"/>
+                    <XAxis dataKey="date" tick={{fontSize: 12}}/>
+                    <YAxis tick={{fontSize: 12}}/>
+                    <Tooltip/>
+                    <Legend wrapperStyle={{fontSize: 12}}/>
+                    <Line type="monotone" dataKey="percentage" stroke={COLORS.present} name="Attendance %"/>
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
             </CardContent>
           </Card>
         )}
@@ -359,23 +361,25 @@ export default function ClassAttendanceReport() {
         {dailyChartData.length > 0 && (
           <Card>
             <CardHeader>
-              <CardTitle>Daily Status Breakdown</CardTitle>
-              <CardDescription>Number of students by status each day</CardDescription>
+              <CardTitle className="text-base sm:text-lg">Daily Status Breakdown</CardTitle>
+              <CardDescription className="text-xs sm:text-sm">Number of students by status each day</CardDescription>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={dailyChartData}>
-                  <CartesianGrid strokeDasharray="3 3"/>
-                  <XAxis dataKey="date"/>
-                  <YAxis/>
-                  <Tooltip/>
-                  <Legend/>
-                  <Bar dataKey="present" stackId="a" fill={COLORS.present} name="Present"/>
-                  <Bar dataKey="late" stackId="a" fill={COLORS.late} name="Late"/>
-                  <Bar dataKey="excused" stackId="a" fill={COLORS.excused} name="Excused"/>
-                  <Bar dataKey="absent" stackId="a" fill={COLORS.absent} name="Absent"/>
-                </BarChart>
-              </ResponsiveContainer>
+              <div className="w-full overflow-x-auto">
+                <ResponsiveContainer width="100%" height={250} minWidth={300}>
+                  <BarChart data={dailyChartData}>
+                    <CartesianGrid strokeDasharray="3 3"/>
+                    <XAxis dataKey="date" tick={{fontSize: 12}}/>
+                    <YAxis tick={{fontSize: 12}}/>
+                    <Tooltip/>
+                    <Legend wrapperStyle={{fontSize: 12}}/>
+                    <Bar dataKey="present" stackId="a" fill={COLORS.present} name="Present"/>
+                    <Bar dataKey="late" stackId="a" fill={COLORS.late} name="Late"/>
+                    <Bar dataKey="excused" stackId="a" fill={COLORS.excused} name="Excused"/>
+                    <Bar dataKey="absent" stackId="a" fill={COLORS.absent} name="Absent"/>
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
             </CardContent>
           </Card>
         )}
@@ -383,20 +387,22 @@ export default function ClassAttendanceReport() {
         {weeklyChartData.length > 0 && (
           <Card>
             <CardHeader>
-              <CardTitle>Weekly Attendance Trend</CardTitle>
-              <CardDescription>Attendance percentage by week</CardDescription>
+              <CardTitle className="text-base sm:text-lg">Weekly Attendance Trend</CardTitle>
+              <CardDescription className="text-xs sm:text-sm">Attendance percentage by week</CardDescription>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={weeklyChartData}>
-                  <CartesianGrid strokeDasharray="3 3"/>
-                  <XAxis dataKey="week"/>
-                  <YAxis/>
-                  <Tooltip/>
-                  <Legend/>
-                  <Bar dataKey="percentage" fill={COLORS.present} name="Attendance %"/>
-                </BarChart>
-              </ResponsiveContainer>
+              <div className="w-full overflow-x-auto">
+                <ResponsiveContainer width="100%" height={250} minWidth={300}>
+                  <BarChart data={weeklyChartData}>
+                    <CartesianGrid strokeDasharray="3 3"/>
+                    <XAxis dataKey="week" tick={{fontSize: 12}}/>
+                    <YAxis tick={{fontSize: 12}}/>
+                    <Tooltip/>
+                    <Legend wrapperStyle={{fontSize: 12}}/>
+                    <Bar dataKey="percentage" fill={COLORS.present} name="Attendance %"/>
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
             </CardContent>
           </Card>
         )}
@@ -404,20 +410,22 @@ export default function ClassAttendanceReport() {
         {monthlyChartData.length > 0 && (
           <Card>
             <CardHeader>
-              <CardTitle>Monthly Attendance Trend</CardTitle>
-              <CardDescription>Attendance percentage by month</CardDescription>
+              <CardTitle className="text-base sm:text-lg">Monthly Attendance Trend</CardTitle>
+              <CardDescription className="text-xs sm:text-sm">Attendance percentage by month</CardDescription>
             </CardHeader>
             <CardContent>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={monthlyChartData}>
-                  <CartesianGrid strokeDasharray="3 3"/>
-                  <XAxis dataKey="month"/>
-                  <YAxis/>
-                  <Tooltip/>
-                  <Legend/>
-                  <Bar dataKey="percentage" fill={COLORS.present} name="Attendance %"/>
-                </BarChart>
-              </ResponsiveContainer>
+              <div className="w-full overflow-x-auto">
+                <ResponsiveContainer width="100%" height={250} minWidth={300}>
+                  <BarChart data={monthlyChartData}>
+                    <CartesianGrid strokeDasharray="3 3"/>
+                    <XAxis dataKey="month" tick={{fontSize: 12}}/>
+                    <YAxis tick={{fontSize: 12}}/>
+                    <Tooltip/>
+                    <Legend wrapperStyle={{fontSize: 12}}/>
+                    <Bar dataKey="percentage" fill={COLORS.present} name="Attendance %"/>
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
             </CardContent>
           </Card>
         )}
@@ -425,21 +433,21 @@ export default function ClassAttendanceReport() {
         {topStudents.length > 0 && (
           <Card>
             <CardHeader>
-              <CardTitle>Top 10 Students by Attendance</CardTitle>
-              <CardDescription>Students with highest attendance rates</CardDescription>
+              <CardTitle className="text-base sm:text-lg">Top 10 Students by Attendance</CardTitle>
+              <CardDescription className="text-xs sm:text-sm">Students with highest attendance rates</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3">
+              <div className="space-y-2 sm:space-y-3">
                 {topStudents.map((student, index) => (
-                  <div key={student.studentId} className="flex items-center justify-between p-3 border rounded-lg">
-                    <div className="flex items-center gap-3">
-                      <div className="flex items-center justify-center size-8 rounded-full bg-primary/10 text-primary font-semibold text-sm">
+                  <div key={student.studentId} className="flex items-center justify-between p-2 sm:p-3 border rounded-lg">
+                    <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
+                      <div className="flex items-center justify-center size-7 sm:size-8 rounded-full bg-primary/10 text-primary font-semibold text-xs sm:text-sm flex-shrink-0">
                         {index + 1}
                       </div>
-                      <span className="font-medium">{student.studentName}</span>
+                      <span className="font-medium text-sm sm:text-base truncate">{student.studentName}</span>
                     </div>
-                    <div className="flex items-center gap-4 text-sm">
-                      <span className="text-muted-foreground">
+                    <div className="flex items-center gap-2 sm:gap-4 text-xs sm:text-sm flex-shrink-0">
+                      <span className="text-muted-foreground hidden sm:inline">
                         {student.presentCount}/{student.totalDays} days
                       </span>
                       <span className="font-bold text-green-600">{formatPercentage(student.percentage)}</span>
@@ -454,33 +462,33 @@ export default function ClassAttendanceReport() {
         {report.studentSummaries?.length > 0 && (
           <Card>
             <CardHeader>
-              <CardTitle>All Students Summary</CardTitle>
-              <CardDescription>Complete attendance summary for all students</CardDescription>
+              <CardTitle className="text-base sm:text-lg">All Students Summary</CardTitle>
+              <CardDescription className="text-xs sm:text-sm">Complete attendance summary for all students</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="overflow-x-auto">
-                <table className="w-full text-sm">
+                <table className="w-full text-xs sm:text-sm">
                   <thead className="border-b">
                     <tr>
-                      <th className="text-left py-3 px-2">Student Name</th>
-                      <th className="text-center py-3 px-2">Total Days</th>
-                      <th className="text-center py-3 px-2">Present</th>
-                      <th className="text-center py-3 px-2">Absent</th>
-                      <th className="text-center py-3 px-2">Late</th>
-                      <th className="text-center py-3 px-2">Excused</th>
-                      <th className="text-center py-3 px-2">Percentage</th>
+                      <th className="text-left py-2 sm:py-3 px-1 sm:px-2 whitespace-nowrap">Student Name</th>
+                      <th className="text-center py-2 sm:py-3 px-1 sm:px-2 whitespace-nowrap">Total</th>
+                      <th className="text-center py-2 sm:py-3 px-1 sm:px-2 whitespace-nowrap">Present</th>
+                      <th className="text-center py-2 sm:py-3 px-1 sm:px-2 whitespace-nowrap">Absent</th>
+                      <th className="text-center py-2 sm:py-3 px-1 sm:px-2 whitespace-nowrap">Late</th>
+                      <th className="text-center py-2 sm:py-3 px-1 sm:px-2 whitespace-nowrap">Excused</th>
+                      <th className="text-center py-2 sm:py-3 px-1 sm:px-2 whitespace-nowrap">%</th>
                     </tr>
                   </thead>
                   <tbody>
                     {report.studentSummaries.map((student) => (
                       <tr key={student.studentId} className="border-b hover:bg-gray-50">
-                        <td className="py-3 px-2">{student.studentName}</td>
-                        <td className="text-center py-3 px-2">{student.totalDays}</td>
-                        <td className="text-center py-3 px-2 text-green-600 font-medium">{student.presentCount}</td>
-                        <td className="text-center py-3 px-2 text-red-600 font-medium">{student.absentCount}</td>
-                        <td className="text-center py-3 px-2 text-yellow-600 font-medium">{student.lateCount}</td>
-                        <td className="text-center py-3 px-2 text-blue-600 font-medium">{student.excusedCount}</td>
-                        <td className="text-center py-3 px-2 font-semibold">{formatPercentage(student.percentage)}</td>
+                        <td className="py-2 sm:py-3 px-1 sm:px-2 whitespace-nowrap">{student.studentName}</td>
+                        <td className="text-center py-2 sm:py-3 px-1 sm:px-2">{student.totalDays}</td>
+                        <td className="text-center py-2 sm:py-3 px-1 sm:px-2 text-green-600 font-medium">{student.presentCount}</td>
+                        <td className="text-center py-2 sm:py-3 px-1 sm:px-2 text-red-600 font-medium">{student.absentCount}</td>
+                        <td className="text-center py-2 sm:py-3 px-1 sm:px-2 text-yellow-600 font-medium">{student.lateCount}</td>
+                        <td className="text-center py-2 sm:py-3 px-1 sm:px-2 text-blue-600 font-medium">{student.excusedCount}</td>
+                        <td className="text-center py-2 sm:py-3 px-1 sm:px-2 font-semibold">{formatPercentage(student.percentage)}</td>
                       </tr>
                     ))}
                   </tbody>

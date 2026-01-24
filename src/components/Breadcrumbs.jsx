@@ -73,22 +73,22 @@ export default function Breadcrumbs() {
   })
 
   return (
-    <nav className="flex items-center gap-2 text-sm text-muted-foreground">
+    <nav className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm text-muted-foreground overflow-x-auto pb-1">
       {breadcrumbItems.map((item, index) => (
-        <div key={item.path} className="flex items-center gap-2">
-          {index > 0 && <ChevronRight className="size-4"/>}
+        <div key={item.path} className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
+          {index > 0 && <ChevronRight className="size-3 sm:size-4"/>}
           {index === breadcrumbItems.length - 1 ? (
-            <span className="font-medium text-foreground flex items-center gap-1">
+            <span className="font-medium text-foreground flex items-center gap-1 whitespace-nowrap">
               {item.icon}
-              {item.label}
+              <span className="truncate max-w-[120px] sm:max-w-none">{item.label}</span>
             </span>
           ) : (
             <Link
               to={item.path}
-              className="hover:text-foreground transition-colors flex items-center gap-1"
+              className="hover:text-foreground transition-colors flex items-center gap-1 whitespace-nowrap"
             >
               {item.icon}
-              {item.label}
+              <span className="truncate max-w-[80px] sm:max-w-none">{item.label}</span>
             </Link>
           )}
         </div>

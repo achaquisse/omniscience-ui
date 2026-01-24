@@ -16,21 +16,21 @@ export default function Layout({children}) {
   return (
     <div className="min-h-screen bg-gray-50">
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-8">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
+          <div className="flex items-center justify-between h-14 sm:h-16">
+            <div className="flex items-center gap-4 sm:gap-8">
               <div
-                className="text-xl font-bold text-primary cursor-pointer"
+                className="text-lg sm:text-xl font-bold text-primary cursor-pointer"
                 onClick={() => navigate('/')}
               >
                 Omniscience
               </div>
             </div>
 
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2 text-sm">
+            <div className="flex items-center gap-2 sm:gap-4">
+              <div className="flex items-center gap-1 sm:gap-2 text-sm">
                 <User className="size-4 text-muted-foreground"/>
-                <span className="hidden sm:inline text-muted-foreground">
+                <span className="hidden sm:inline text-muted-foreground truncate max-w-[150px] md:max-w-none">
                   {user?.email}
                 </span>
               </div>
@@ -38,7 +38,7 @@ export default function Layout({children}) {
                 onClick={handleSignOut}
                 variant="ghost"
                 size="sm"
-                className="gap-2"
+                className="gap-1 sm:gap-2 px-2 sm:px-3"
               >
                 <LogOut className="size-4"/>
                 <span className="hidden sm:inline">Sign Out</span>
@@ -48,10 +48,10 @@ export default function Layout({children}) {
         </div>
       </nav>
 
-      <div className="pt-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="pt-14 sm:pt-16">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-6">
           <Breadcrumbs/>
-          <div className="mt-6">
+          <div className="mt-4 sm:mt-6">
             {children}
           </div>
         </div>
