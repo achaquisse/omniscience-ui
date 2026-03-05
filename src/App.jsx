@@ -4,10 +4,14 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import Layout from "@/components/Layout";
 import Login from "@/pages/Login.jsx";
 import Home from "@/pages/Home.jsx";
-import StudentClasses from "@/pages/StudentClasses.jsx";
-import Registrations from "@/pages/Registrations.jsx";
-import ClassAttendanceReport from "@/pages/ClassAttendanceReport.jsx";
-import StudentAttendanceReport from "@/pages/StudentAttendanceReport.jsx";
+import AttendanceClasses from "@/pages/AttendanceClasses.jsx";
+import AttendanceRegistration from "@/pages/AttendanceRegistration.jsx";
+import AttendanceReportGlobal from "@/pages/AttendanceReportGlobal.jsx";
+import AttendanceReportIndividual from "@/pages/AttendanceReportIndividual.jsx";
+import GradeClasses from "@/pages/GradeClasses.jsx";
+import Grades from "@/pages/Grades.jsx";
+import CertificateClasses from "@/pages/CertificateClasses.jsx";
+import CertificateStudents from "@/pages/CertificateStudents.jsx";
 
 export default function App() {
   return (
@@ -26,41 +30,81 @@ export default function App() {
             }
           />
           <Route
-            path="/student-classes"
+            path="/attendance"
             element={
               <ProtectedRoute>
                 <Layout>
-                  <StudentClasses/>
+                  <AttendanceClasses/>
                 </Layout>
               </ProtectedRoute>
             }
           />
           <Route
-            path="/student-classes/:classId/registrations"
+            path="/attendance/:classId/registrations"
             element={
               <ProtectedRoute>
                 <Layout>
-                  <Registrations/>
+                  <AttendanceRegistration/>
                 </Layout>
               </ProtectedRoute>
             }
           />
           <Route
-            path="/student-classes/:classId/attendance-report"
+            path="/attendance/:classId/report"
             element={
               <ProtectedRoute>
                 <Layout>
-                  <ClassAttendanceReport/>
+                  <AttendanceReportGlobal/>
                 </Layout>
               </ProtectedRoute>
             }
           />
           <Route
-            path="/student-classes/:classId/students/:studentId/attendance-report"
+            path="/attendance/:classId/students/:studentId/report"
             element={
               <ProtectedRoute>
                 <Layout>
-                  <StudentAttendanceReport/>
+                  <AttendanceReportIndividual/>
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/grades"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <GradeClasses/>
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/grades/:classId"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <Grades/>
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/certificates"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <CertificateClasses/>
+                </Layout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/certificates/:classId"
+            element={
+              <ProtectedRoute>
+                <Layout>
+                  <CertificateStudents/>
                 </Layout>
               </ProtectedRoute>
             }

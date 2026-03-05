@@ -138,6 +138,29 @@ export const fetchClassAttendanceReport = async (accessToken, studentClassId, {
   return response.json()
 }
 
+export const generateCertificate = async (accessToken, {template, studentName, certDescription}) => {
+  const params = new URLSearchParams()
+  params.append('template', template)
+  params.append('studentName', studentName)
+  params.append('certDescription', certDescription)
+
+  const url = `${API_BASE_URL}/certificates?${params.toString()}`
+
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${accessToken}`,
+    },
+  })
+
+  if (!response.ok) {
+    const error = await response.json()
+    throw new Error(error.error || 'Failed to generate certificate')
+  }
+
+  return response.blob()
+}
+
 export const fetchStudentAttendanceReport = async (accessToken, studentId, studentClassId, {
   startDate,
   endDate

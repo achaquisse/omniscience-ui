@@ -1,18 +1,38 @@
+import {useState} from 'react'
 import {useNavigate} from 'react-router-dom'
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card'
-import {ClipboardCheck} from 'lucide-react'
+import {Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle} from '@/components/ui/dialog'
+import {ClipboardCheck, FileBadge, FileDigit} from 'lucide-react'
 
 export default function Home() {
   const navigate = useNavigate()
+  const [showComingSoon, setShowComingSoon] = useState(false)
 
   const modules = [
     {
       id: 'class-attendance',
-      name: 'Class Attendance',
+      name: 'Attendance',
       description: 'Manage student class attendance',
       icon: ClipboardCheck,
-      path: '/student-classes',
+      path: '/attendance',
       color: 'text-blue-600'
+    },
+    {
+      id: 'certificates',
+      name: 'Certificates',
+      description: 'Generate certificate of participation',
+      icon: FileBadge,
+      path: '/certificates',
+      color: 'text-purple-600'
+    },
+    {
+      id: 'grades',
+      name: 'Grades',
+      description: 'Student evaluations and grades',
+      icon: FileDigit,
+      path: '/grades',
+      color: 'text-red-600',
+      disabled: true
     }
   ]
 
@@ -29,8 +49,8 @@ export default function Home() {
           return (
             <Card
               key={module.id}
-              className="hover:shadow-lg transition-all cursor-pointer group border-2 hover:border-primary"
-              onClick={() => navigate(module.path)}
+              className={`transition-all border-2 ${module.disabled ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-lg cursor-pointer group hover:border-primary'}`}
+              onClick={() => module.disabled ? setShowComingSoon(true) : navigate(module.path)}
             >
               <CardHeader className="text-center pb-3 sm:pb-4">
                 <div className="mx-auto mb-3 sm:mb-4 flex items-center justify-center">
@@ -48,6 +68,15 @@ export default function Home() {
           )
         })}
       </div>
+
+      <Dialog open={showComingSoon} onOpenChange={setShowComingSoon}>
+        <DialogContent className="sm:max-w-sm text-center">
+          <DialogHeader>
+            <DialogTitle>Under Development</DialogTitle>
+            <DialogDescription>Coming Soon</DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

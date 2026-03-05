@@ -14,7 +14,6 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import {
-  ArrowLeft,
   BarChart3,
   Calendar,
   ChartBar,
@@ -32,7 +31,7 @@ import {
   XCircle
 } from 'lucide-react'
 
-export default function Registrations() {
+export default function AttendanceRegistration() {
   const {classId} = useParams()
   const {accessToken} = useAuth()
   const navigate = useNavigate()
@@ -185,15 +184,6 @@ export default function Registrations() {
 
   const handleNextPage = () => {
     setCurrentPage(prev => Math.min(totalPages, prev + 1))
-  }
-
-  const handleSortChange = (field) => {
-    if (sortField === field) {
-      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
-    } else {
-      setSortField(field)
-      setSortOrder('asc')
-    }
   }
 
   const handleDateChange = (days) => {
@@ -533,14 +523,10 @@ export default function Registrations() {
       <div className="space-y-4 sm:space-y-6">
         <div className="flex flex-col gap-3 sm:gap-4">
           <div className="flex items-center gap-3 sm:gap-4">
-            <Button onClick={() => navigate('/student-classes')} variant="outline" size="icon"
-                    className="flex-shrink-0">
-              <ArrowLeft className="size-4"/>
-            </Button>
             <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold">Enrolled Students</h1>
           </div>
           <div className="flex flex-wrap gap-2">
-            <Button onClick={() => navigate(`/student-classes/${classId}/attendance-report`)} variant="outline"
+            <Button onClick={() => navigate(`/attendance/${classId}/report`)} variant="outline"
                     size="sm" className="text-xs sm:text-sm">
               <BarChart3 className="size-3 sm:size-4 mr-1 sm:mr-2"/>
               <span className="hidden xs:inline">View </span>Report
@@ -738,33 +724,33 @@ export default function Registrations() {
                                 {currentStatus}
                               </span>
                             )}
-                            <div className="flex gap-1 ml-auto">
+                            <div className="flex gap-2 ml-auto">
                               {!attendanceMode && isToday && (
                                 <Button
-                                  variant="ghost"
-                                  size="icon-sm"
+                                  variant="outline"
+                                  size="icon"
                                   onClick={(e) => {
                                     e.stopPropagation()
                                     setIndividualAttendanceModal({open: true, registration: reg})
                                   }}
-                                  className="opacity-50 hover:opacity-100 transition-opacity flex-shrink-0"
+                                  className="flex-shrink-0"
                                   title="Record attendance"
                                 >
-                                  <ClipboardCheck className="size-3.5 sm:size-4"/>
+                                  <ClipboardCheck className="size-4 sm:size-5"/>
                                 </Button>
                               )}
                               {!canEditAttendance && (
                                 <Button
-                                  variant="ghost"
-                                  size="icon-sm"
+                                  variant="outline"
+                                  size="icon"
                                   onClick={(e) => {
                                     e.stopPropagation()
-                                    navigate(`/student-classes/${classId}/students/${reg.StudentID}/attendance-report`)
+                                    navigate(`/attendance/${classId}/students/${reg.StudentID}/report`)
                                   }}
-                                  className="opacity-50 hover:opacity-100 transition-opacity flex-shrink-0"
+                                  className="flex-shrink-0"
                                   title="View attendance report"
                                 >
-                                  <ChartBar className="size-3.5 sm:size-4"/>
+                                  <ChartBar className="size-4 sm:size-5"/>
                                 </Button>
                               )}
                             </div>

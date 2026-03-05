@@ -397,7 +397,7 @@ paths:
       description: Returns a list of student registrations for a specific class
       operationId: listRegistrations
       tags:
-        - Registrations
+        - AttendanceRegistration
       security:
         - bearerAuth: [ ]
       parameters:
@@ -650,7 +650,7 @@ paths:
 tags:
   - name: Student Classes
     description: Operations related to student classes
-  - name: Registrations
+  - name: AttendanceRegistration
     description: Operations related to student registrations
   - name: Attendance
     description: Operations related to attendance tracking and reporting
