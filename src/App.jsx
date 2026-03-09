@@ -1,4 +1,5 @@
-import {BrowserRouter, Route, Routes} from "react-router-dom";
+import {BrowserRouter, Route, Routes, useLocation} from "react-router-dom";
+import {useEffect} from "react";
 import {AuthProvider} from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import Layout from "@/components/Layout";
@@ -13,9 +14,29 @@ import GradeStudents from "@/pages/GradeStudents.jsx";
 import CertificateClasses from "@/pages/CertificateClasses.jsx";
 import CertificateStudents from "@/pages/CertificateStudents.jsx";
 
+const ROUTE_TITLES = [
+  {pattern: /^\/attendance/, title: "Attendance"},
+  {pattern: /^\/grades/, title: "Grades"},
+  {pattern: /^\/certificates/, title: "Certificates"},
+  {pattern: /^\/login/, title: "Login"},
+  {pattern: /^\/$/, title: "Home"},
+];
+
+function DocumentTitle() {
+  const {pathname} = useLocation();
+
+  useEffect(() => {
+    const match = ROUTE_TITLES.find(({pattern}) => pattern.test(pathname));
+    document.title = match ? `${match.title} - Omniscience` : "Omniscience";
+  }, [pathname]);
+
+  return null;
+}
+
 export default function App() {
   return (
     <BrowserRouter>
+      <DocumentTitle/>
       <AuthProvider>
         <Routes>
           <Route path="/login" element={<Login/>}/>

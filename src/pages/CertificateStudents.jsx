@@ -1,12 +1,13 @@
 import {useEffect, useState} from 'react'
 import {useNavigate, useParams} from 'react-router-dom'
 import {useAuth} from '@/contexts/AuthContext'
-import {fetchRegistrations, fetchStudentClass, generateCertificate} from '@/lib/api'
+import {fetchRegistrations, fetchStudentClass} from '@/lib/api'
 import {Button} from '@/components/ui/button'
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card'
 import {Input} from '@/components/ui/input'
-import {Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle,} from '@/components/ui/dialog'
+import {Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle} from '@/components/ui/dialog'
 import {ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Loader2} from 'lucide-react'
+import GenerateCertificateDialog from '@/components/GenerateCertificateDialog'
 
 const formatDate = (dateString) => {
   if (!dateString) return 'N/A'
@@ -15,20 +16,6 @@ const formatDate = (dateString) => {
   const month = date.toLocaleDateString('en-US', {month: 'short'})
   const year = date.getFullYear()
   return `${day}/${month}/${year}`
-}
-
-const detectTemplate = (courseName = '') => {
-  const lower = courseName.toLowerCase()
-  return lower.includes('english') || lower.includes('inglês') || lower.includes('ingles')
-    ? 'english'
-    : 'portuguese'
-}
-
-const composeCertDescription = ({template, level, startDate, endDate, marks}) => {
-  if (template === 'english') {
-    return `For his active and invaluable participation during the ${level} of the Essential English Course at Omniscience School from ${startDate} to ${endDate}, and finished the level with ${marks} marks.`
-  }
-  return `Por sua participação activa e inestimável ao Curso de Fundamentos de Informática na Omniscience School de ${startDate} a ${endDate}, tendo terminado o curso com ${marks} valores.`
 }
 
 export default function CertificateStudents() {
@@ -51,10 +38,6 @@ export default function CertificateStudents() {
   const itemsPerPage = 50
 
   const [selectedReg, setSelectedReg] = useState(null)
-  const [grade, setGrade] = useState('')
-  const [gradeError, setGradeError] = useState('')
-  const [generating, setGenerating] = useState(false)
-  const [generateError, setGenerateError] = useState('')
 
   useEffect(() => {
     const loadData = async () => {
@@ -132,65 +115,10 @@ export default function CertificateStudents() {
       return
     }
     setSelectedReg(reg)
-    setGrade('')
-    setGradeError('')
-    setGenerateError('')
   }
 
   const closeDialog = () => {
-    if (generating) return
     setSelectedReg(null)
-    setGrade('')
-    setGradeError('')
-    setGenerateError('')
-  }
-
-  const validateGrade = (value) => {
-    if (value === '') return 'Grade is required'
-    const num = parseFloat(value)
-    if (isNaN(num)) return 'Grade must be a number'
-    if (num < 0 || num > 20) return 'Grade must be between 0 and 20'
-    return ''
-  }
-
-  const handleGenerate = async () => {
-    const err = validateGrade(grade)
-    if (err) {
-      setGradeError(err)
-      return
-    }
-
-    try {
-      setGenerating(true)
-      setGenerateError('')
-
-      const courseName = studentClass?.Course?.Name || ''
-      const template = detectTemplate(courseName)
-      const studentName = `${selectedReg.Student?.FirstName} ${selectedReg.Student?.LastName}`
-      const certDescription = composeCertDescription({
-        template,
-        level: (studentClass?.Name || '').split(' - ')[0],
-        startDate: formatDate(studentClass?.Period?.Start),
-        endDate: formatDate(studentClass?.Period?.End),
-        marks: grade
-      })
-
-      const blob = await generateCertificate(accessToken, {template, studentName, certDescription})
-
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      const safeName = studentName.replace(/\s+/g, '_')
-      const safeClass = (studentClass?.Name || '').replace(/\s+/g, '_')
-      a.download = `Certificate_${safeName}_${safeClass}.pdf`
-      a.click()
-      URL.revokeObjectURL(url)
-      closeDialog()
-    } catch (err) {
-      setGenerateError(err.message)
-    } finally {
-      setGenerating(false)
-    }
   }
 
   return (
@@ -351,85 +279,12 @@ export default function CertificateStudents() {
         </>
       )}
 
-      <Dialog open={!!selectedReg} onOpenChange={(open) => {
-        if (!open) closeDialog()
-      }}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Generate Certificate</DialogTitle>
-          </DialogHeader>
-
-          {selectedReg && (
-            <div className="space-y-4">
-              <p className="text-sm text-muted-foreground">
-                You are about to generate a certificate of participation for the following student.
-              </p>
-
-              <div className="rounded-lg border p-4 space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Student</span>
-                  <span className="font-medium">
-                    {selectedReg.Student?.FirstName} {selectedReg.Student?.LastName}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Class</span>
-                  <span className="font-medium">{studentClass?.Name}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Start Date</span>
-                  <span className="font-medium">{formatDate(studentClass?.Period?.Start)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">End Date</span>
-                  <span className="font-medium">{formatDate(studentClass?.Period?.End)}</span>
-                </div>
-              </div>
-
-              <div className="space-y-1.5">
-                <label className="text-sm font-medium">Grade <span
-                  className="text-muted-foreground">(0 – 20)</span></label>
-                <Input
-                  type="number"
-                  min="0"
-                  max="20"
-                  step="0.01"
-                  placeholder="e.g. 15.5"
-                  value={grade}
-                  onChange={(e) => {
-                    setGrade(e.target.value)
-                    setGradeError(validateGrade(e.target.value))
-                  }}
-                  className="text-sm"
-                />
-                {gradeError && (
-                  <p className="text-xs text-destructive">{gradeError}</p>
-                )}
-              </div>
-
-              {generateError && (
-                <p className="text-xs text-destructive">{generateError}</p>
-              )}
-            </div>
-          )}
-
-          <DialogFooter>
-            <Button variant="outline" onClick={closeDialog} disabled={generating}>
-              Cancel
-            </Button>
-            <Button onClick={handleGenerate} disabled={generating}>
-              {generating ? (
-                <>
-                  <Loader2 className="size-4 mr-2 animate-spin"/>
-                  Generating...
-                </>
-              ) : (
-                'Generate Certificate'
-              )}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <GenerateCertificateDialog
+        open={!!selectedReg}
+        onClose={closeDialog}
+        studentClass={studentClass}
+        registration={selectedReg}
+      />
 
       <Dialog open={!!inactiveReg} onOpenChange={(open) => {
         if (!open) setInactiveReg(null)

@@ -2,6 +2,7 @@ import {useEffect, useMemo, useState} from 'react'
 import {useParams} from 'react-router-dom'
 import {useAuth} from '@/contexts/AuthContext'
 import {fetchGradeDetail, fetchGrades, fetchStudentClass, patchGrade, postGrade} from '@/lib/api'
+import GenerateCertificateDialog from '@/components/GenerateCertificateDialog'
 import {Button} from '@/components/ui/button'
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card'
 import {Input} from '@/components/ui/input'
@@ -131,6 +132,7 @@ export default function GradeStudents() {
   const itemsPerPage = 50
 
   const [selectedReg, setSelectedReg] = useState(null)
+  const [certReg, setCertReg] = useState(null)
   const [dialogDetailData, setDialogDetailData] = useState(null)
   const [dialogDetailLoading, setDialogDetailLoading] = useState(false)
   const [editingEvals, setEditingEvals] = useState(new Set())
@@ -581,8 +583,7 @@ export default function GradeStudents() {
                               variant="ghost"
                               size="sm"
                               className="h-7 w-7 p-0 text-green-700 hover:text-green-800 hover:bg-green-50"
-                              onClick={() => {
-                              }}
+                              onClick={() => setCertReg({reg, finalGrade: grades?.FinalGrade})}
                             >
                               <Award className="size-3.5"/>
                               <span className="sr-only">Generate certificate</span>
@@ -627,6 +628,14 @@ export default function GradeStudents() {
           )}
         </>
       )}
+
+      <GenerateCertificateDialog
+        open={!!certReg}
+        onClose={() => setCertReg(null)}
+        studentClass={studentClass}
+        registration={certReg?.reg}
+        initialGrade={certReg?.finalGrade}
+      />
 
       <Dialog open={!!selectedReg} onOpenChange={(open) => {
         if (!open) closeDialog()
