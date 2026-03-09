@@ -161,6 +161,87 @@ export const generateCertificate = async (accessToken, {template, studentName, c
   return response.blob()
 }
 
+export const fetchGrades = async (accessToken, studentClassId) => {
+  const params = new URLSearchParams()
+  params.append('student_class_id', studentClassId)
+
+  const url = `${API_BASE_URL}/grades?${params.toString()}`
+
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+    },
+  })
+
+  if (!response.ok) {
+    const error = await response.json()
+    throw new Error(error.error || 'Failed to fetch grades')
+  }
+
+  return response.json()
+}
+
+export const fetchGradeDetail = async (accessToken, registrationId) => {
+  const url = `${API_BASE_URL}/grades/${registrationId}`
+
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+    },
+  })
+
+  if (!response.ok) {
+    const error = await response.json()
+    throw new Error(error.error || 'Failed to fetch grade detail')
+  }
+
+  return response.json()
+}
+
+export const postGrade = async (accessToken, registrationId, gradeData) => {
+  const url = `${API_BASE_URL}/grades/${registrationId}`
+
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(gradeData),
+  })
+
+  if (!response.ok) {
+    const error = await response.json()
+    throw new Error(error.error || 'Failed to create grade')
+  }
+
+  return response.json()
+}
+
+export const patchGrade = async (accessToken, registrationId, gradeId, gradeData) => {
+  const url = `${API_BASE_URL}/grades/${registrationId}/${gradeId}`
+
+  const response = await fetch(url, {
+    method: 'PATCH',
+    headers: {
+      'Authorization': `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(gradeData),
+  })
+
+  if (!response.ok) {
+    const error = await response.json()
+    throw new Error(error.error || 'Failed to update grade')
+  }
+
+  return response.json()
+}
+
 export const fetchStudentAttendanceReport = async (accessToken, studentId, studentClassId, {
   startDate,
   endDate

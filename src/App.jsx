@@ -9,7 +9,7 @@ import AttendanceRegistration from "@/pages/AttendanceRegistration.jsx";
 import AttendanceReportGlobal from "@/pages/AttendanceReportGlobal.jsx";
 import AttendanceReportIndividual from "@/pages/AttendanceReportIndividual.jsx";
 import GradeClasses from "@/pages/GradeClasses.jsx";
-import Grades from "@/pages/Grades.jsx";
+import GradeStudents from "@/pages/GradeStudents.jsx";
 import CertificateClasses from "@/pages/CertificateClasses.jsx";
 import CertificateStudents from "@/pages/CertificateStudents.jsx";
 
@@ -84,7 +84,7 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <Layout>
-                  <Grades/>
+                  <GradeStudents/>
                 </Layout>
               </ProtectedRoute>
             }

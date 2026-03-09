@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen } from '@testing-library/react'
-import { MemoryRouter } from 'react-router-dom'
+import {beforeEach, describe, expect, it, vi} from 'vitest'
+import {render, screen} from '@testing-library/react'
+import {MemoryRouter} from 'react-router-dom'
 import GradeClasses from './GradeClasses'
 
 const mockNavigate = vi.fn()
@@ -14,7 +14,7 @@ vi.mock('react-router-dom', async () => {
 })
 
 vi.mock('@/contexts/AuthContext', () => ({
-  useAuth: () => ({ accessToken: 'token' }),
+  useAuth: () => ({accessToken: 'token'}),
 }))
 
 const mockUseStudentClasses = vi.fn()
@@ -54,29 +54,29 @@ describe('GradeClasses', () => {
 
     render(
       <MemoryRouter>
-        <GradeClasses />
+        <GradeClasses/>
       </MemoryRouter>
     )
-    expect(screen.getByText('Grades')).toBeInTheDocument()
+    expect(screen.getByText('GradeStudents')).toBeInTheDocument()
   })
 
   it('shows loading spinner', () => {
-    mockUseStudentClasses.mockReturnValue({ ...baseHookReturn, loading: true })
+    mockUseStudentClasses.mockReturnValue({...baseHookReturn, loading: true})
 
-    const { container } = render(
+    const {container} = render(
       <MemoryRouter>
-        <GradeClasses />
+        <GradeClasses/>
       </MemoryRouter>
     )
     expect(container.querySelector('.animate-spin')).toBeInTheDocument()
   })
 
   it('shows error message', () => {
-    mockUseStudentClasses.mockReturnValue({ ...baseHookReturn, error: 'Server error' })
+    mockUseStudentClasses.mockReturnValue({...baseHookReturn, error: 'Server error'})
 
     render(
       <MemoryRouter>
-        <GradeClasses />
+        <GradeClasses/>
       </MemoryRouter>
     )
     expect(screen.getByText('Server error')).toBeInTheDocument()
@@ -87,7 +87,7 @@ describe('GradeClasses', () => {
 
     render(
       <MemoryRouter>
-        <GradeClasses />
+        <GradeClasses/>
       </MemoryRouter>
     )
     expect(screen.getByText('No student classes found')).toBeInTheDocument()
@@ -97,14 +97,14 @@ describe('GradeClasses', () => {
     mockUseStudentClasses.mockReturnValue({
       ...baseHookReturn,
       classes: [
-        { ID: 1, Name: 'Physics 101', Course: { Name: 'Physics' }, Period: { Start: '2024-01-01', End: '2024-06-30' } },
+        {ID: 1, Name: 'Physics 101', Course: {Name: 'Physics'}, Period: {Start: '2024-01-01', End: '2024-06-30'}},
       ],
-      filteredClasses: [{ ID: 1 }],
+      filteredClasses: [{ID: 1}],
     })
 
     render(
       <MemoryRouter>
-        <GradeClasses />
+        <GradeClasses/>
       </MemoryRouter>
     )
     expect(screen.getByText('Physics 101')).toBeInTheDocument()

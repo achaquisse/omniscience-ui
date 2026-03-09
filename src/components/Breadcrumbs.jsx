@@ -1,7 +1,7 @@
 import {Link, useLocation, useParams} from 'react-router-dom'
 import {ChevronRight, Home} from 'lucide-react'
 import {useEffect, useState} from 'react'
-import {fetchStudentClass, fetchRegistrations} from '@/lib/api'
+import {fetchRegistrations, fetchStudentClass} from '@/lib/api'
 import {useAuth} from '@/contexts/AuthContext'
 
 export default function Breadcrumbs() {
@@ -52,20 +52,20 @@ export default function Breadcrumbs() {
 
   let currentPath = ''
   let skipNext = false
-  
-  const isIndividualReportOldPath = pathSegments.includes('student-classes') && 
-                                    pathSegments.includes('students') && 
-                                    pathSegments.includes('attendance-report') &&
-                                    params.studentId
-  const isIndividualReportNewPath = pathSegments.includes('attendance') && 
-                                    pathSegments.includes('students') && 
-                                    pathSegments[pathSegments.length - 1] === 'report' &&
-                                    params.studentId
+
+  const isIndividualReportOldPath = pathSegments.includes('student-classes') &&
+    pathSegments.includes('students') &&
+    pathSegments.includes('attendance-report') &&
+    params.studentId
+  const isIndividualReportNewPath = pathSegments.includes('attendance') &&
+    pathSegments.includes('students') &&
+    pathSegments[pathSegments.length - 1] === 'report' &&
+    params.studentId
   const isIndividualReport = isIndividualReportOldPath || isIndividualReportNewPath
-  const isGlobalReport = pathSegments.includes('student-classes') && 
-                         pathSegments.includes('attendance-report') && 
-                         !params.studentId
-  
+  const isGlobalReport = pathSegments.includes('student-classes') &&
+    pathSegments.includes('attendance-report') &&
+    !params.studentId
+
   pathSegments.forEach((segment, index) => {
     currentPath += `/${segment}`
 

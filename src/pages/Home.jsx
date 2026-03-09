@@ -18,21 +18,21 @@ export default function Home() {
       color: 'text-blue-600'
     },
     {
-      id: 'certificates',
-      name: 'Certificates',
-      description: 'Generate certificate of participation',
-      icon: FileBadge,
-      path: '/certificates',
-      color: 'text-purple-600'
-    },
-    {
       id: 'grades',
       name: 'Grades',
       description: 'Student evaluations and grades',
       icon: FileDigit,
       path: '/grades',
       color: 'text-red-600',
-      disabled: true
+      disabled: false
+    },
+    {
+      id: 'certificates',
+      name: 'Certificates',
+      description: 'Generate certificate of participation',
+      icon: FileBadge,
+      path: '/certificates',
+      color: 'text-purple-600'
     }
   ]
 

@@ -1,7 +1,7 @@
-import { describe, it, expect, vi } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import {describe, expect, it, vi} from 'vitest'
+import {render, screen} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { MemoryRouter } from 'react-router-dom'
+import {MemoryRouter} from 'react-router-dom'
 import Home from './Home'
 
 const mockNavigate = vi.fn()
@@ -18,7 +18,7 @@ describe('Home', () => {
   it('renders page title', () => {
     render(
       <MemoryRouter>
-        <Home />
+        <Home/>
       </MemoryRouter>
     )
     expect(screen.getByText('Home')).toBeInTheDocument()
@@ -28,7 +28,7 @@ describe('Home', () => {
   it('renders attendance module card', () => {
     render(
       <MemoryRouter>
-        <Home />
+        <Home/>
       </MemoryRouter>
     )
     expect(screen.getByText('Attendance')).toBeInTheDocument()
@@ -38,10 +38,10 @@ describe('Home', () => {
   it('renders grades module card', () => {
     render(
       <MemoryRouter>
-        <Home />
+        <Home/>
       </MemoryRouter>
     )
-    expect(screen.getByText('Grades')).toBeInTheDocument()
+    expect(screen.getByText('GradeStudents')).toBeInTheDocument()
     expect(screen.getByText('Student evaluations and grades')).toBeInTheDocument()
   })
 
@@ -49,7 +49,7 @@ describe('Home', () => {
     const user = userEvent.setup()
     render(
       <MemoryRouter>
-        <Home />
+        <Home/>
       </MemoryRouter>
     )
 
@@ -61,11 +61,11 @@ describe('Home', () => {
     const user = userEvent.setup()
     render(
       <MemoryRouter>
-        <Home />
+        <Home/>
       </MemoryRouter>
     )
 
-    await user.click(screen.getByText('Grades'))
+    await user.click(screen.getByText('GradeStudents'))
     expect(mockNavigate).toHaveBeenCalledWith('/grades')
   })
 })

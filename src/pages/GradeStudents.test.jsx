@@ -1,7 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
-import { MemoryRouter, Route, Routes } from 'react-router-dom'
-import Grades from './Grades'
+import {beforeEach, describe, expect, it, vi} from 'vitest'
+import {render, screen, waitFor} from '@testing-library/react'
+import {MemoryRouter, Route, Routes} from 'react-router-dom'
+import GradeStudents from './GradeStudents.jsx'
 
 const mockNavigate = vi.fn()
 
@@ -14,7 +14,7 @@ vi.mock('react-router-dom', async () => {
 })
 
 vi.mock('@/contexts/AuthContext', () => ({
-  useAuth: () => ({ accessToken: 'token' }),
+  useAuth: () => ({accessToken: 'token'}),
 }))
 
 const mockFetchStudentClass = vi.fn()
@@ -33,18 +33,20 @@ function renderWithRoute() {
   return render(
     <MemoryRouter initialEntries={['/grades/1']}>
       <Routes>
-        <Route path="/grades/:classId" element={<Grades />} />
+        <Route path="/grades/:classId" element={<GradeStudents/>}/>
       </Routes>
     </MemoryRouter>
   )
 }
 
-describe('Grades', () => {
+describe('GradeStudents', () => {
   it('shows loading spinner initially', () => {
-    mockFetchStudentClass.mockReturnValue(new Promise(() => {}))
-    mockFetchRegistrations.mockReturnValue(new Promise(() => {}))
+    mockFetchStudentClass.mockReturnValue(new Promise(() => {
+    }))
+    mockFetchRegistrations.mockReturnValue(new Promise(() => {
+    }))
 
-    const { container } = renderWithRoute()
+    const {container} = renderWithRoute()
     expect(container.querySelector('.animate-spin')).toBeInTheDocument()
   })
 
@@ -52,14 +54,14 @@ describe('Grades', () => {
     mockFetchStudentClass.mockResolvedValue({
       ID: 1,
       Name: 'Math 101',
-      Course: { Name: 'Mathematics' },
-      Period: { Start: '2024-01-01', End: '2024-06-30' },
+      Course: {Name: 'Mathematics'},
+      Period: {Start: '2024-01-01', End: '2024-06-30'},
     })
     mockFetchRegistrations.mockResolvedValue([
       {
         ID: 1,
         StudentID: 10,
-        Student: { FirstName: 'John', LastName: 'Doe' },
+        Student: {FirstName: 'John', LastName: 'Doe'},
         Status: 'ACTIVE',
         EnrolledAt: '2024-01-01',
       },
@@ -88,8 +90,8 @@ describe('Grades', () => {
     mockFetchStudentClass.mockResolvedValue({
       ID: 1,
       Name: 'Math 101',
-      Course: { Name: 'Math' },
-      Period: { Start: '2024-01-01', End: '2024-06-30' },
+      Course: {Name: 'Math'},
+      Period: {Start: '2024-01-01', End: '2024-06-30'},
     })
     mockFetchRegistrations.mockResolvedValue([])
 
