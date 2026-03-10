@@ -41,11 +41,11 @@ describe('Home', () => {
         <Home/>
       </MemoryRouter>
     )
-    expect(screen.getByText('GradeStudents')).toBeInTheDocument()
+    expect(screen.getByText('Grades')).toBeInTheDocument()
     expect(screen.getByText('Student evaluations and grades')).toBeInTheDocument()
   })
 
-  it('navigates to /student-classes when attendance card is clicked', async () => {
+  it('navigates to /attendance when attendance card is clicked', async () => {
     const user = userEvent.setup()
     render(
       <MemoryRouter>
@@ -54,7 +54,7 @@ describe('Home', () => {
     )
 
     await user.click(screen.getByText('Attendance'))
-    expect(mockNavigate).toHaveBeenCalledWith('/student-classes')
+    expect(mockNavigate).toHaveBeenCalledWith('/attendance')
   })
 
   it('navigates to /grades when grades card is clicked', async () => {
@@ -65,7 +65,7 @@ describe('Home', () => {
       </MemoryRouter>
     )
 
-    await user.click(screen.getByText('GradeStudents'))
+    await user.click(screen.getByText('Grades'))
     expect(mockNavigate).toHaveBeenCalledWith('/grades')
   })
 })

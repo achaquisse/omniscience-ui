@@ -1,26 +1,23 @@
 import React, { useEffect, useRef } from 'react'
 
+const parseDateValue = (value) => {
+  const d = value ? new Date(value) : new Date()
+  return {
+    day: d.getDate(),
+    month: d.getMonth() + 1,
+    year: d.getFullYear()
+  }
+}
+
 const DateInput = ({ value, onChange }) => {
-  const [date, setDate] = React.useState(() => {
-    const d = value ? new Date(value) : new Date()
-    return {
-      day: d.getDate(),
-      month: d.getMonth() + 1,
-      year: d.getFullYear()
-    }
-  })
+  const [date, setDate] = React.useState(() => parseDateValue(value))
 
   const monthRef = useRef(null)
   const dayRef = useRef(null)
   const yearRef = useRef(null)
 
   useEffect(() => {
-    const d = value ? new Date(value) : new Date()
-    setDate({
-      day: d.getDate(),
-      month: d.getMonth() + 1,
-      year: d.getFullYear()
-    })
+    setDate(parseDateValue(value))
   }, [value])
 
   const validateDate = (field, value) => {

@@ -38,8 +38,16 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Lint
+        run: pnpm run lint
+
+      - name: Run tests
+        run: pnpm run test
+
       - name: Build application
         run: pnpm run build
+        env:
+          FARO_API_KEY: ${{ secrets.FARO_API_KEY }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3

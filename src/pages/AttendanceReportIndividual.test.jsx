@@ -20,9 +20,12 @@ vi.mock('@/contexts/AuthContext', () => ({
 const mockFetchStudentAttendanceReport = vi.fn()
 const mockFetchStudentClass = vi.fn()
 
+const mockFetchRegistrations = vi.fn()
+
 vi.mock('@/lib/api', () => ({
   fetchStudentAttendanceReport: (...args) => mockFetchStudentAttendanceReport(...args),
   fetchStudentClass: (...args) => mockFetchStudentClass(...args),
+  fetchRegistrations: (...args) => mockFetchRegistrations(...args),
 }))
 
 vi.mock('recharts', () => ({
@@ -66,6 +69,7 @@ describe('AttendanceReportIndividual', () => {
   it('shows loading spinner initially', () => {
     mockFetchStudentClass.mockReturnValue(new Promise(() => {}))
     mockFetchStudentAttendanceReport.mockReturnValue(new Promise(() => {}))
+    mockFetchRegistrations.mockReturnValue(new Promise(() => {}))
 
     const { container } = renderWithRoute()
     expect(container.querySelector('.animate-spin')).toBeInTheDocument()
@@ -75,6 +79,7 @@ describe('AttendanceReportIndividual', () => {
     mockFetchStudentClass.mockResolvedValue({
       Period: { Start: '2024-01-01', End: '2024-06-30' },
     })
+    mockFetchRegistrations.mockResolvedValue([])
     mockFetchStudentAttendanceReport.mockRejectedValue(new Error('Not found'))
 
     renderWithRoute()
@@ -86,8 +91,12 @@ describe('AttendanceReportIndividual', () => {
 
   it('renders report data', async () => {
     mockFetchStudentClass.mockResolvedValue({
+      Name: 'Math 101',
       Period: { Start: '2024-01-01', End: '2024-06-30' },
     })
+    mockFetchRegistrations.mockResolvedValue([
+      { StudentID: 10, Student: { FirstName: 'John', LastName: 'Doe' } },
+    ])
     mockFetchStudentAttendanceReport.mockResolvedValue({
       student: { firstName: 'John', lastName: 'Doe' },
       summary: {
@@ -108,7 +117,7 @@ describe('AttendanceReportIndividual', () => {
     await waitFor(() => {
       expect(screen.getByText('85%')).toBeInTheDocument()
     })
-    expect(screen.getByText('Student Attendance Report')).toBeInTheDocument()
+    expect(screen.getByText(/Attendance Report of/)).toBeInTheDocument()
     expect(screen.getByText('50')).toBeInTheDocument()
   })
 })

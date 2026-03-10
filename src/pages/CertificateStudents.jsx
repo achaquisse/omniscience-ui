@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react'
-import {useNavigate, useParams} from 'react-router-dom'
+import {useParams} from 'react-router-dom'
 import {useAuth} from '@/contexts/AuthContext'
 import {fetchRegistrations, fetchStudentClass} from '@/lib/api'
 import {Button} from '@/components/ui/button'
@@ -21,7 +21,6 @@ const formatDate = (dateString) => {
 export default function CertificateStudents() {
   const {classId} = useParams()
   const {accessToken} = useAuth()
-  const navigate = useNavigate()
 
   const [studentClass, setStudentClass] = useState(null)
   const [registrations, setRegistrations] = useState([])

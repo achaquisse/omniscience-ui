@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react'
-import {useNavigate, useParams} from 'react-router-dom'
+import {useParams} from 'react-router-dom'
 import {useAuth} from '@/contexts/AuthContext'
 import {fetchClassAttendanceReport, fetchStudentClass} from '@/lib/api'
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card'
@@ -24,7 +24,6 @@ import {
 export default function AttendanceReportGlobal() {
   const {classId} = useParams()
   const {accessToken} = useAuth()
-  const navigate = useNavigate()
 
   const [report, setReport] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -59,7 +58,7 @@ export default function AttendanceReportGlobal() {
         setStartDate(periodStart)
         setEndDate(periodEnd)
         setDatesInitialized(true)
-      } catch (err) {
+      } catch {
         setStartDate(today)
         setEndDate(today)
         setDatesInitialized(true)

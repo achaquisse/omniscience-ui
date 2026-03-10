@@ -1,7 +1,7 @@
 import {beforeEach, describe, expect, it, vi} from 'vitest'
 import {render, screen} from '@testing-library/react'
 import {MemoryRouter} from 'react-router-dom'
-import GradeClasses from './GradeClasses'
+import CertificateClasses from './CertificateClasses'
 
 const mockNavigate = vi.fn()
 
@@ -48,16 +48,16 @@ const baseHookReturn = {
   handleNextPage: vi.fn(),
 }
 
-describe('GradeClasses', () => {
+describe('CertificateClasses', () => {
   it('renders page title', () => {
     mockUseStudentClasses.mockReturnValue(baseHookReturn)
 
     render(
       <MemoryRouter>
-        <GradeClasses/>
+        <CertificateClasses/>
       </MemoryRouter>
     )
-    expect(screen.getByText('Grades')).toBeInTheDocument()
+    expect(screen.getByText('Select a Class')).toBeInTheDocument()
   })
 
   it('shows loading spinner', () => {
@@ -65,21 +65,21 @@ describe('GradeClasses', () => {
 
     const {container} = render(
       <MemoryRouter>
-        <GradeClasses/>
+        <CertificateClasses/>
       </MemoryRouter>
     )
     expect(container.querySelector('.animate-spin')).toBeInTheDocument()
   })
 
   it('shows error message', () => {
-    mockUseStudentClasses.mockReturnValue({...baseHookReturn, error: 'Server error'})
+    mockUseStudentClasses.mockReturnValue({...baseHookReturn, error: 'Network error'})
 
     render(
       <MemoryRouter>
-        <GradeClasses/>
+        <CertificateClasses/>
       </MemoryRouter>
     )
-    expect(screen.getByText('Server error')).toBeInTheDocument()
+    expect(screen.getByText('Network error')).toBeInTheDocument()
   })
 
   it('shows empty state', () => {
@@ -87,7 +87,7 @@ describe('GradeClasses', () => {
 
     render(
       <MemoryRouter>
-        <GradeClasses/>
+        <CertificateClasses/>
       </MemoryRouter>
     )
     expect(screen.getByText('No student classes found')).toBeInTheDocument()
@@ -97,16 +97,16 @@ describe('GradeClasses', () => {
     mockUseStudentClasses.mockReturnValue({
       ...baseHookReturn,
       classes: [
-        {ID: 1, Name: 'Physics 101', Course: {Name: 'Physics'}, Period: {Start: '2024-01-01', End: '2024-06-30'}},
+        {ID: 1, Name: 'English 101', Course: {Name: 'English'}, Period: {Start: '2024-01-01', End: '2024-06-30'}},
       ],
       filteredClasses: [{ID: 1}],
     })
 
     render(
       <MemoryRouter>
-        <GradeClasses/>
+        <CertificateClasses/>
       </MemoryRouter>
     )
-    expect(screen.getByText('Physics 101')).toBeInTheDocument()
+    expect(screen.getByText('English 101')).toBeInTheDocument()
   })
 })

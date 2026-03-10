@@ -83,6 +83,8 @@ describe('AttendanceReportGlobal', () => {
 
   it('renders report data', async () => {
     mockFetchStudentClass.mockResolvedValue({
+      Name: 'Math 101',
+      Course: { Name: 'Mathematics' },
       Period: { Start: '2024-01-01', End: '2024-06-30' },
     })
     mockFetchClassAttendanceReport.mockResolvedValue({
@@ -107,6 +109,6 @@ describe('AttendanceReportGlobal', () => {
       expect(screen.getByText('25')).toBeInTheDocument()
     })
     expect(screen.getByText('90%')).toBeInTheDocument()
-    expect(screen.getByText('Attendance Report')).toBeInTheDocument()
+    expect(screen.getByText(/Attendance Report of/)).toBeInTheDocument()
   })
 })

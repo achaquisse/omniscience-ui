@@ -59,7 +59,7 @@ describe('AttendanceClasses', () => {
         <AttendanceClasses />
       </MemoryRouter>
     )
-    expect(screen.getByText('Class Attendance')).toBeInTheDocument()
+    expect(screen.getByText('Select a Class')).toBeInTheDocument()
   })
 
   it('shows loading state', () => {

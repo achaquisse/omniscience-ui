@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { Button } from './button'
 import { Popover, PopoverContent, PopoverTrigger } from './popover'
 import { Calendar } from './calendar'
@@ -156,7 +156,7 @@ export const DateRangePicker = ({
     }
   }
 
-  const checkPreset = () => {
+  const checkPreset = useCallback(() => {
     for (const preset of PRESETS) {
       const presetRange = getPresetRange(preset.name)
       const normalizedRangeFrom = new Date(range.from)
@@ -175,7 +175,7 @@ export const DateRangePicker = ({
       }
     }
     setSelectedPreset(undefined)
-  }
+  }, [range])
 
   const resetValues = () => {
     setRange({
@@ -210,7 +210,7 @@ export const DateRangePicker = ({
 
   useEffect(() => {
     checkPreset()
-  }, [range])
+  }, [checkPreset])
 
   const PresetButton = ({ preset, label, isSelected }) => (
     <Button
@@ -241,7 +241,7 @@ export const DateRangePicker = ({
       openedRangeCompareRef.current = rangeCompare
       setIsSelectingNewRange(false)
     }
-  }, [isOpen])
+  }, [isOpen]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <Popover

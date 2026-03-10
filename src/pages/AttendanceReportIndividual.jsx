@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react'
-import {useNavigate, useParams} from 'react-router-dom'
+import {useParams} from 'react-router-dom'
 import {useAuth} from '@/contexts/AuthContext'
 import {fetchRegistrations, fetchStudentAttendanceReport, fetchStudentClass} from '@/lib/api'
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card'
@@ -24,13 +24,11 @@ import {
 export default function AttendanceReportIndividual() {
   const {classId, studentId} = useParams()
   const {accessToken} = useAuth()
-  const navigate = useNavigate()
 
   const [report, setReport] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [studentName, setStudentName] = useState('')
-  const [className, setClassName] = useState('')
 
   const today = new Date().toISOString().split('T')[0]
 
@@ -44,7 +42,6 @@ export default function AttendanceReportIndividual() {
 
       try {
         const studentClass = await fetchStudentClass(accessToken, classId)
-        setClassName(studentClass.Name || '')
 
         const registrations = await fetchRegistrations(accessToken, classId)
         const registration = registrations.find(reg => reg.StudentID === parseInt(studentId))
@@ -64,7 +61,7 @@ export default function AttendanceReportIndividual() {
         setStartDate(periodStart)
         setEndDate(periodEnd)
         setDatesInitialized(true)
-      } catch (err) {
+      } catch {
         setStartDate(today)
         setEndDate(today)
         setDatesInitialized(true)

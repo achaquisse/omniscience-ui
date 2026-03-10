@@ -43,8 +43,8 @@ export default function AttendanceRegistration() {
   const [error, setError] = useState(null)
 
   const [searchQuery, setSearchQuery] = useState('')
-  const [sortField, setSortField] = useState('name')
-  const [sortOrder, setSortOrder] = useState('asc')
+  const [sortField] = useState('name')
+  const [sortOrder] = useState('asc')
 
   const [filtersExpanded, setFiltersExpanded] = useState(false)
 
@@ -225,16 +225,6 @@ export default function AttendanceRegistration() {
     setRemarksModal({open: false, registrationId: null, status: null})
   }
 
-  const setAttendanceRemarks = (registrationId, remarks) => {
-    setAttendanceMap(prev => ({
-      ...prev,
-      [registrationId]: {
-        ...prev[registrationId],
-        remarks
-      }
-    }))
-  }
-
   const handleSaveAttendance = async () => {
     try {
       setSaving(true)
@@ -242,7 +232,7 @@ export default function AttendanceRegistration() {
       setSaveSuccess(false)
 
       const attendanceRecords = Object.entries(attendanceMap)
-        .filter(([_, data]) => data.status)
+        .filter(([, data]) => data.status)
         .map(([registrationId, data]) => ({
           registration_id: parseInt(registrationId),
           date: selectedDate,
@@ -411,7 +401,7 @@ export default function AttendanceRegistration() {
         setSelectedStatus(currentStatus || '')
         setRemarks(currentRemarks)
       }
-    }, [individualAttendanceModal.open, individualAttendanceModal.registration])
+    }, [])
 
     const needsRemarks = selectedStatus === 'LATE' || selectedStatus === 'EXCUSED'
 

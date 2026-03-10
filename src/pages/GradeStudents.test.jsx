@@ -18,11 +18,14 @@ vi.mock('@/contexts/AuthContext', () => ({
 }))
 
 const mockFetchStudentClass = vi.fn()
-const mockFetchRegistrations = vi.fn()
+const mockFetchGrades = vi.fn()
 
 vi.mock('@/lib/api', () => ({
   fetchStudentClass: (...args) => mockFetchStudentClass(...args),
-  fetchRegistrations: (...args) => mockFetchRegistrations(...args),
+  fetchGrades: (...args) => mockFetchGrades(...args),
+  fetchGradeDetail: vi.fn(),
+  postGrade: vi.fn(),
+  patchGrade: vi.fn(),
 }))
 
 beforeEach(() => {
@@ -43,7 +46,7 @@ describe('GradeStudents', () => {
   it('shows loading spinner initially', () => {
     mockFetchStudentClass.mockReturnValue(new Promise(() => {
     }))
-    mockFetchRegistrations.mockReturnValue(new Promise(() => {
+    mockFetchGrades.mockReturnValue(new Promise(() => {
     }))
 
     const {container} = renderWithRoute()
@@ -57,7 +60,7 @@ describe('GradeStudents', () => {
       Course: {Name: 'Mathematics'},
       Period: {Start: '2024-01-01', End: '2024-06-30'},
     })
-    mockFetchRegistrations.mockResolvedValue([
+    mockFetchGrades.mockResolvedValue([
       {
         ID: 1,
         StudentID: 10,
@@ -77,7 +80,7 @@ describe('GradeStudents', () => {
 
   it('shows error state', async () => {
     mockFetchStudentClass.mockRejectedValue(new Error('Failed to load'))
-    mockFetchRegistrations.mockRejectedValue(new Error('Failed to load'))
+    mockFetchGrades.mockRejectedValue(new Error('Failed to load'))
 
     renderWithRoute()
 
@@ -93,7 +96,7 @@ describe('GradeStudents', () => {
       Course: {Name: 'Math'},
       Period: {Start: '2024-01-01', End: '2024-06-30'},
     })
-    mockFetchRegistrations.mockResolvedValue([])
+    mockFetchGrades.mockResolvedValue([])
 
     renderWithRoute()
 
