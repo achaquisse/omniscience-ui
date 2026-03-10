@@ -110,7 +110,6 @@ export default function AttendanceRegistration() {
               })
 
               if (recordForDate) {
-                console.log(`Found attendance for reg ${reg.ID}:`, recordForDate)
                 attendanceByStudent[reg.ID] = {
                   status: recordForDate.status,
                   remarks: recordForDate.remarks || ''
@@ -279,11 +278,7 @@ export default function AttendanceRegistration() {
   }
 
   const getAttendanceStatus = (registrationId) => {
-    const status = attendanceMap[registrationId]?.status || existingAttendance[registrationId]?.status || null
-    if (status) {
-      console.log(`Status for reg ${registrationId}:`, status, 'from', attendanceMap[registrationId]?.status ? 'attendanceMap' : 'existingAttendance')
-    }
-    return status
+    return attendanceMap[registrationId]?.status || existingAttendance[registrationId]?.status || null
   }
 
   const getAttendanceColor = (status) => {

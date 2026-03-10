@@ -5,6 +5,7 @@ import {fetchClassAttendanceReport, fetchStudentClass} from '@/lib/api'
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card'
 import {DateRangePicker} from '@/components/ui/date-range-picker'
 import {BarChart3, Calendar, Loader2, TrendingUp, Users} from 'lucide-react'
+import {ATTENDANCE_COLORS, getChartColorByName} from '@/lib/format'
 import {
   Bar,
   BarChart,
@@ -98,28 +99,6 @@ export default function AttendanceReportGlobal() {
 
   const formatPercentage = (value) => {
     return `${Math.round(value)}%`
-  }
-
-  const COLORS = {
-    present: '#22c55e',
-    absent: '#ef4444',
-    late: '#eab308',
-    excused: '#3b82f6'
-  }
-
-  const getColorByName = (name) => {
-    switch (name) {
-      case 'Present':
-        return COLORS.present
-      case 'Absent':
-        return COLORS.absent
-      case 'Late':
-        return COLORS.late
-      case 'Excused':
-        return COLORS.excused
-      default:
-        return '#6b7280'
-    }
   }
 
   if (loading) {
@@ -280,7 +259,7 @@ export default function AttendanceReportGlobal() {
                   dataKey="value"
                 >
                   {overallPieData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={getColorByName(entry.name)}/>
+                    <Cell key={`cell-${index}`} fill={getChartColorByName(entry.name)}/>
                   ))}
                 </Pie>
                 <Tooltip/>
@@ -344,7 +323,7 @@ export default function AttendanceReportGlobal() {
                   <YAxis tick={{fontSize: 12}}/>
                   <Tooltip/>
                   <Legend wrapperStyle={{fontSize: 12}}/>
-                  <Line type="monotone" dataKey="percentage" stroke={COLORS.present} name="Attendance %"/>
+                  <Line type="monotone" dataKey="percentage" stroke={ATTENDANCE_COLORS.present} name="Attendance %"/>
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -367,10 +346,10 @@ export default function AttendanceReportGlobal() {
                   <YAxis tick={{fontSize: 12}}/>
                   <Tooltip/>
                   <Legend wrapperStyle={{fontSize: 12}}/>
-                  <Bar dataKey="present" stackId="a" fill={COLORS.present} name="Present"/>
-                  <Bar dataKey="late" stackId="a" fill={COLORS.late} name="Late"/>
-                  <Bar dataKey="excused" stackId="a" fill={COLORS.excused} name="Excused"/>
-                  <Bar dataKey="absent" stackId="a" fill={COLORS.absent} name="Absent"/>
+                  <Bar dataKey="present" stackId="a" fill={ATTENDANCE_COLORS.present} name="Present"/>
+                  <Bar dataKey="late" stackId="a" fill={ATTENDANCE_COLORS.late} name="Late"/>
+                  <Bar dataKey="excused" stackId="a" fill={ATTENDANCE_COLORS.excused} name="Excused"/>
+                  <Bar dataKey="absent" stackId="a" fill={ATTENDANCE_COLORS.absent} name="Absent"/>
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -393,7 +372,7 @@ export default function AttendanceReportGlobal() {
                   <YAxis tick={{fontSize: 12}}/>
                   <Tooltip/>
                   <Legend wrapperStyle={{fontSize: 12}}/>
-                  <Bar dataKey="percentage" fill={COLORS.present} name="Attendance %"/>
+                  <Bar dataKey="percentage" fill={ATTENDANCE_COLORS.present} name="Attendance %"/>
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -416,7 +395,7 @@ export default function AttendanceReportGlobal() {
                   <YAxis tick={{fontSize: 12}}/>
                   <Tooltip/>
                   <Legend wrapperStyle={{fontSize: 12}}/>
-                  <Bar dataKey="percentage" fill={COLORS.present} name="Attendance %"/>
+                  <Bar dataKey="percentage" fill={ATTENDANCE_COLORS.present} name="Attendance %"/>
                 </BarChart>
               </ResponsiveContainer>
             </div>

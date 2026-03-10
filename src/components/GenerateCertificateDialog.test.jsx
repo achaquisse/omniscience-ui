@@ -39,7 +39,7 @@ describe('GenerateCertificateDialog', () => {
         registration={registration}
       />
     )
-    expect(screen.getByText('Generate Certificate')).toBeInTheDocument()
+    expect(screen.getByRole('heading', {name: 'Generate Certificate'})).toBeInTheDocument()
     expect(screen.getByText('John Doe')).toBeInTheDocument()
     expect(screen.getByText('Level 1 - English Basics')).toBeInTheDocument()
   })

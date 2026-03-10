@@ -8,6 +8,7 @@ import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/compo
 import {Input} from '@/components/ui/input'
 import {Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle} from '@/components/ui/dialog'
 import {Award, Check, ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Loader2, Pencil, X} from 'lucide-react'
+import {formatShortDate} from '@/lib/format'
 
 function EvalRowHeader() {
   return (
@@ -230,15 +231,6 @@ export default function GradeStudents() {
     }
   }
 
-  const formatDate = (dateString) => {
-    if (!dateString) return 'N/A'
-    const date = new Date(dateString)
-    const day = String(date.getDate()).padStart(2, '0')
-    const month = date.toLocaleDateString('en-US', {month: 'short'})
-    const year = date.getFullYear()
-    return `${day}/${month}/${year}`
-  }
-
   const getApprovalStatus = (finalGrade, examGrade) => {
     if (finalGrade == null) return null
     if (examGrade == null || examGrade === 0) return null
@@ -391,7 +383,7 @@ export default function GradeStudents() {
           </h1>
           {studentClass && (
             <p className="text-sm text-muted-foreground mt-1">
-              {studentClass.Course?.Name} • {formatDate(studentClass.Period?.Start)} - {formatDate(studentClass.Period?.End)}
+              {studentClass.Course?.Name} • {formatShortDate(studentClass.Period?.Start)} - {formatShortDate(studentClass.Period?.End)}
             </p>
           )}
         </div>

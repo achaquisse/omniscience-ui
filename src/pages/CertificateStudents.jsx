@@ -8,15 +8,7 @@ import {Input} from '@/components/ui/input'
 import {Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle} from '@/components/ui/dialog'
 import {ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Loader2} from 'lucide-react'
 import GenerateCertificateDialog from '@/components/GenerateCertificateDialog'
-
-const formatDate = (dateString) => {
-  if (!dateString) return 'N/A'
-  const date = new Date(dateString)
-  const day = String(date.getDate()).padStart(2, '0')
-  const month = date.toLocaleDateString('en-US', {month: 'short'})
-  const year = date.getFullYear()
-  return `${day}/${month}/${year}`
-}
+import {formatShortDate} from '@/lib/format'
 
 export default function CertificateStudents() {
   const {classId} = useParams()
@@ -129,7 +121,7 @@ export default function CertificateStudents() {
           </h1>
           {studentClass && (
             <p className="text-sm text-muted-foreground mt-1">
-              {studentClass.Course?.Name} • {formatDate(studentClass.Period?.Start)} - {formatDate(studentClass.Period?.End)}
+              {studentClass.Course?.Name} • {formatShortDate(studentClass.Period?.Start)} - {formatShortDate(studentClass.Period?.End)}
             </p>
           )}
         </div>

@@ -5,6 +5,7 @@ import {fetchRegistrations, fetchStudentAttendanceReport, fetchStudentClass} fro
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card'
 import {DateRangePicker} from '@/components/ui/date-range-picker'
 import {Calendar, Loader2, TrendingUp} from 'lucide-react'
+import {ATTENDANCE_COLORS, getChartColorByName, getStatusBadgeClass} from '@/lib/format'
 import {
   Bar,
   BarChart,
@@ -102,28 +103,6 @@ export default function AttendanceReportIndividual() {
     return `${Math.round(value)}%`
   }
 
-  const COLORS = {
-    present: '#22c55e',
-    absent: '#ef4444',
-    late: '#eab308',
-    excused: '#3b82f6'
-  }
-
-  const getColorByName = (name) => {
-    switch (name) {
-      case 'Present':
-        return COLORS.present
-      case 'Absent':
-        return COLORS.absent
-      case 'Late':
-        return COLORS.late
-      case 'Excused':
-        return COLORS.excused
-      default:
-        return '#6b7280'
-    }
-  }
-
   if (loading) {
     return (
       <div className="flex justify-center items-center py-20">
@@ -171,21 +150,6 @@ export default function AttendanceReportIndividual() {
     present: month.presentCount,
     total: month.totalDays
   })) || []
-
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 'PRESENT':
-        return 'bg-green-100 text-green-800'
-      case 'ABSENT':
-        return 'bg-red-100 text-red-800'
-      case 'LATE':
-        return 'bg-yellow-100 text-yellow-800'
-      case 'EXCUSED':
-        return 'bg-blue-100 text-blue-800'
-      default:
-        return 'bg-gray-100 text-gray-800'
-    }
-  }
 
   return (
     <div className="space-y-4 sm:space-y-6">
@@ -283,7 +247,7 @@ export default function AttendanceReportIndividual() {
                     dataKey="value"
                   >
                     {summaryPieData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={getColorByName(entry.name)}/>
+                      <Cell key={`cell-${index}`} fill={getChartColorByName(entry.name)}/>
                     ))}
                   </Pie>
                   <Tooltip/>
@@ -348,7 +312,7 @@ export default function AttendanceReportIndividual() {
                   <YAxis tick={{fontSize: 12}}/>
                   <Tooltip/>
                   <Legend wrapperStyle={{fontSize: 12}}/>
-                  <Bar dataKey="percentage" fill={COLORS.present} name="Attendance %"/>
+                  <Bar dataKey="percentage" fill={ATTENDANCE_COLORS.present} name="Attendance %"/>
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -371,7 +335,7 @@ export default function AttendanceReportIndividual() {
                   <YAxis tick={{fontSize: 12}}/>
                   <Tooltip/>
                   <Legend wrapperStyle={{fontSize: 12}}/>
-                  <Line type="monotone" dataKey="percentage" stroke={COLORS.present} name="Attendance %"/>
+                  <Line type="monotone" dataKey="percentage" stroke={ATTENDANCE_COLORS.present} name="Attendance %"/>
                 </LineChart>
               </ResponsiveContainer>
             </div>
@@ -393,7 +357,7 @@ export default function AttendanceReportIndividual() {
                   <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
                     <span className="text-xs sm:text-sm font-medium whitespace-nowrap">{formatDate(record.date)}</span>
                     <span
-                      className={`px-2 py-0.5 sm:py-1 rounded-full text-xs font-medium whitespace-nowrap ${getStatusColor(record.status)}`}>
+                      className={`px-2 py-0.5 sm:py-1 rounded-full text-xs font-medium whitespace-nowrap ${getStatusBadgeClass(record.status)}`}>
                         {record.status}
                       </span>
                   </div>

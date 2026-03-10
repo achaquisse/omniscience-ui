@@ -5,15 +5,7 @@ import {Button} from '@/components/ui/button'
 import {Input} from '@/components/ui/input'
 import {Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle} from '@/components/ui/dialog'
 import {Loader2} from 'lucide-react'
-
-const formatDate = (dateString) => {
-  if (!dateString) return 'N/A'
-  const date = new Date(dateString)
-  const day = String(date.getDate()).padStart(2, '0')
-  const month = date.toLocaleDateString('en-US', {month: 'short'})
-  const year = date.getFullYear()
-  return `${day}/${month}/${year}`
-}
+import {formatShortDate} from '@/lib/format'
 
 const detectTemplate = (courseName = '') => {
   const lower = courseName.toLowerCase()
@@ -73,8 +65,8 @@ export default function GenerateCertificateDialog({open, onClose, studentClass, 
       const certDescription = composeCertDescription({
         template,
         level: (studentClass?.Name || '').split(' - ')[0],
-        startDate: formatDate(studentClass?.Period?.Start),
-        endDate: formatDate(studentClass?.Period?.End),
+        startDate: formatShortDate(studentClass?.Period?.Start),
+        endDate: formatShortDate(studentClass?.Period?.End),
         marks: effectiveGrade,
       })
 
@@ -122,11 +114,11 @@ export default function GenerateCertificateDialog({open, onClose, studentClass, 
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Start Date</span>
-                <span className="font-medium">{formatDate(studentClass?.Period?.Start)}</span>
+                <span className="font-medium">{formatShortDate(studentClass?.Period?.Start)}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-muted-foreground">End Date</span>
-                <span className="font-medium">{formatDate(studentClass?.Period?.End)}</span>
+                <span className="font-medium">{formatShortDate(studentClass?.Period?.End)}</span>
               </div>
             </div>
 
