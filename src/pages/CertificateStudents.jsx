@@ -226,6 +226,7 @@ export default function CertificateStudents() {
                     key={reg.ID}
                     className="border-b last:border-0 hover:bg-muted/50 cursor-pointer"
                     onClick={() => openDialog(reg)}
+                    data-faro-user-action-name="open-certificate-dialog"
                   >
                     <td className="px-4 py-3 text-xs sm:text-sm text-muted-foreground">
                       {startIndex + index + 1}

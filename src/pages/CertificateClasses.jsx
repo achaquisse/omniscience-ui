@@ -79,6 +79,7 @@ export default function CertificateClasses() {
                 key={cls.ID}
                 cls={cls}
                 onClick={() => navigate(`/certificates/${cls.ID}`)}
+                faroAction="select-certificate-class"
               />
             ))}
           </div>

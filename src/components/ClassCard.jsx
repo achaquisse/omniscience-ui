@@ -9,11 +9,12 @@ const formatDate = (dateString) => {
   return `${day}/${month}/${year}`
 }
 
-export default function ClassCard({cls, onClick, showIndicator = false}) {
+export default function ClassCard({cls, onClick, showIndicator = false, faroAction}) {
   return (
     <Card
       className="hover:shadow-md transition-shadow cursor-pointer relative"
       onClick={onClick}
+      {...(faroAction ? {'data-faro-user-action-name': faroAction} : {})}
     >
       {showIndicator && (
         <div className="absolute top-2 sm:top-3 right-2 sm:right-3">

@@ -497,6 +497,7 @@ export default function AttendanceRegistration() {
               size="sm"
               onClick={() => handleSaveIndividualAttendance(selectedStatus, remarks)}
               disabled={!selectedStatus || (needsRemarks && !remarks.trim()) || saving}
+              data-faro-user-action-name="record-individual-attendance"
             >
               {saving ? (
                 <>
@@ -527,13 +528,15 @@ export default function AttendanceRegistration() {
           </div>
           <div className="flex flex-wrap gap-2">
             <Button onClick={() => navigate(`/attendance/${classId}/report`)} variant="outline"
-                    size="sm" className="text-xs sm:text-sm">
+                    size="sm" className="text-xs sm:text-sm"
+                    data-faro-user-action-name="view-class-attendance-report">
               <BarChart3 className="size-3 sm:size-4 mr-1 sm:mr-2"/>
               <span className="hidden xs:inline">View </span>Report
             </Button>
             {!attendanceMode && isToday && (
               <Button onClick={() => setAttendanceMode(true)} variant="default" size="sm"
-                      className="text-xs sm:text-sm">
+                      className="text-xs sm:text-sm"
+                      data-faro-user-action-name="start-attendance-mode">
                 <ClipboardCheck className="size-3 sm:size-4 mr-1 sm:mr-2"/>
                 <span className="hidden sm:inline">Record Today's </span>Attendance
               </Button>
@@ -611,6 +614,7 @@ export default function AttendanceRegistration() {
                     onClick={handleMarkAllPresent}
                     disabled={saving || loading}
                     className="text-xs sm:text-sm"
+                    data-faro-user-action-name="mark-all-present"
                   >
                     <CheckCircle2 className="size-3 sm:size-4 mr-1 sm:mr-2"/>
                     Mark All Present
@@ -621,6 +625,7 @@ export default function AttendanceRegistration() {
                     onClick={handleSaveAttendance}
                     disabled={!hasChanges || saving || loading}
                     className="text-xs sm:text-sm"
+                    data-faro-user-action-name="record-bulk-attendance"
                   >
                     {saving ? (
                       <>
@@ -735,6 +740,7 @@ export default function AttendanceRegistration() {
                                   }}
                                   className="flex-shrink-0"
                                   title="Record attendance"
+                                  data-faro-user-action-name="open-individual-attendance"
                                 >
                                   <ClipboardCheck className="size-4 sm:size-5"/>
                                 </Button>
@@ -749,6 +755,7 @@ export default function AttendanceRegistration() {
                                   }}
                                   className="flex-shrink-0"
                                   title="View attendance report"
+                                  data-faro-user-action-name="view-student-attendance-report"
                                 >
                                   <ChartBar className="size-4 sm:size-5"/>
                                 </Button>

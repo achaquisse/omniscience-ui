@@ -47,6 +47,7 @@ function EvalActions({hasValue, hasDate, isEditing, onEdit, onCancel, onSave}) {
               size="sm"
               className="h-7 w-7 p-0 text-green-600 hover:text-green-700 hover:bg-green-50"
               onClick={onSave}
+              data-faro-user-action-name="save-grade"
             >
               <Check className="size-3"/>
               <span className="sr-only">Save</span>
@@ -574,6 +575,7 @@ export default function GradeStudents() {
                             size="sm"
                             className="h-7 w-7 p-0"
                             onClick={() => openDialog(reg)}
+                            data-faro-user-action-name="open-grade-dialog"
                           >
                             <Pencil className="size-3.5"/>
                             <span className="sr-only">Update grades</span>
@@ -584,6 +586,7 @@ export default function GradeStudents() {
                               size="sm"
                               className="h-7 w-7 p-0 text-green-700 hover:text-green-800 hover:bg-green-50"
                               onClick={() => setCertReg({reg, finalGrade: grades?.FinalGrade})}
+                              data-faro-user-action-name="open-certificate-from-grades"
                             >
                               <Award className="size-3.5"/>
                               <span className="sr-only">Generate certificate</span>

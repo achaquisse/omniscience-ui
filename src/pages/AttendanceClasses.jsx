@@ -117,6 +117,7 @@ export default function AttendanceClasses() {
                 cls={cls}
                 onClick={() => navigate(`/attendance/${cls.ID}/registrations`)}
                 showIndicator={classesWithAttendance.has(cls.ID)}
+                faroAction="select-attendance-class"
               />
             ))}
           </div>

@@ -79,6 +79,7 @@ export default function GradeClasses() {
                 key={cls.ID}
                 cls={cls}
                 onClick={() => navigate(`/grades/${cls.ID}`)}
+                faroAction="select-grade-class"
               />
             ))}
           </div>

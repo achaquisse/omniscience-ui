@@ -164,7 +164,7 @@ export default function GenerateCertificateDialog({open, onClose, studentClass, 
           <Button variant="outline" onClick={handleClose} disabled={generating}>
             Cancel
           </Button>
-          <Button onClick={handleGenerate} disabled={generating}>
+          <Button onClick={handleGenerate} disabled={generating} data-faro-user-action-name="generate-certificate">
             {generating ? (
               <>
                 <Loader2 className="size-4 mr-2 animate-spin"/>
